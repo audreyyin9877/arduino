@@ -143,7 +143,7 @@ void setup() {
   pinMode(check_yellow_LED, OUTPUT);
   pinMode(check_green_LED, OUTPUT);
 
-  pinMode(fiber_photo, OUTPUT); 
+  pinMode(fiber_photo, OUTPUT);
 
   /*
   // UNCOMMENT TO TEST SENSORS
@@ -375,6 +375,10 @@ void loop() {
     Serial.print("TONE DURATION (SEC): "); Serial.println(TONE_DURATION);
     Serial.print("SHOCK DURATION (SEC): "); Serial.println(SHOCK_DURATION);
     Serial.print("TONE PAIRED WITH SHOCK AT (SEC): "); Serial.println(TONE_DURATION - SHOCK_DURATION);
+
+    // begin fiber photometry data collection
+    Serial.println("FIBER > ON");
+    digitalWrite(fiber_photo, HIGH); 
 
     // SIGNAL START OF THE SESSION
     for (int x = 0; x < 5; x ++) {
