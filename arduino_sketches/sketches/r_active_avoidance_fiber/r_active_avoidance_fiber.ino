@@ -87,6 +87,7 @@ const int check_green_LED = 27;
 
 // fiber photometry
 const int fiber_clock = 45;
+const int fiber_trial = 46;
 //##################################################################################################################
 // ANALOG PINS
 // Right Sensors
@@ -144,6 +145,7 @@ void setup() {
   pinMode(check_green_LED, OUTPUT);
 
   pinMode(fiber_clock, OUTPUT);
+  pinMode(fiber_trial, OUTPUT);
 
   /*
   // UNCOMMENT TO TEST SENSORS
