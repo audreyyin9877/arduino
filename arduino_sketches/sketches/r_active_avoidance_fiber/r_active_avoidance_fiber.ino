@@ -86,7 +86,7 @@ const int check_yellow_LED = 25;
 const int check_green_LED = 27;
 
 // fiber photometry
-const int fiber_photo = 45;
+const int fiber_clock = 45;
 //##################################################################################################################
 // ANALOG PINS
 // Right Sensors
@@ -143,7 +143,7 @@ void setup() {
   pinMode(check_yellow_LED, OUTPUT);
   pinMode(check_green_LED, OUTPUT);
 
-  pinMode(fiber_photo, OUTPUT);
+  pinMode(fiber_clock, OUTPUT);
 
   /*
   // UNCOMMENT TO TEST SENSORS
@@ -376,9 +376,9 @@ void loop() {
     Serial.print("SHOCK DURATION (SEC): "); Serial.println(SHOCK_DURATION);
     Serial.print("TONE PAIRED WITH SHOCK AT (SEC): "); Serial.println(TONE_DURATION - SHOCK_DURATION);
 
-    // begin fiber photometry data collection
+    // INITIATE FIBER PHOTOMETRY CLOCK (DATA COLLECTION START)
     Serial.println("FIBER > ON");
-    digitalWrite(fiber_photo, HIGH);
+    digitalWrite(fiber_clock, HIGH);
 
     // SIGNAL START OF THE SESSION
     for (int x = 0; x < 5; x ++) {
@@ -762,12 +762,12 @@ void loop() {
 
     }
 
+    // TERMINATE FIBER PHOTOMETRY CLOCK (DATA COLLECTION END)
+    Serial.println("FIBER > OFF");
+    digitalWrite(fiber_clock, LOW);
+
     // SESSION FINAL INFO AND STATISTICS
     // ###########################################################################
-    // terminate fiber photometry
-    Serial.println("FIBER > OFF");
-    digitalWrite(fiber_photo, LOW);
-    
     Serial.println("SESSION > END");
     Serial.println("SESSION STATISTICS");
     Serial.print("SESSION TOTAL SHUTTLINGS: "); Serial.println(TOTAL_AVOIDANCE_SUCCESS);
