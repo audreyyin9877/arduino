@@ -404,7 +404,9 @@ void loop() {
     for (int x = 0; x < N_TRIALS; x++) {
 
       // PRINT INFORMATION ABOUT TRIAL
-      Serial.print("TRIAL NUMBER "); Serial.print(x+1); Serial.println(" > START");
+      Serial.print("TRIAL "); Serial.print(x+1); Serial.println(" > START");
+      // Trial number marks beginning of fiber_trial timekeeping
+      digitalWrite(fiber_trial, HIGH);
 
 
       // TRIAL ONE UNAVOID
