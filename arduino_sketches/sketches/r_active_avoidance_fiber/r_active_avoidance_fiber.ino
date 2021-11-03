@@ -378,7 +378,7 @@ void loop() {
 
     // begin fiber photometry data collection
     Serial.println("FIBER > ON");
-    digitalWrite(fiber_photo, HIGH); 
+    digitalWrite(fiber_photo, HIGH);
 
     // SIGNAL START OF THE SESSION
     for (int x = 0; x < 5; x ++) {
@@ -764,6 +764,10 @@ void loop() {
 
     // SESSION FINAL INFO AND STATISTICS
     // ###########################################################################
+    // terminate fiber photometry
+    Serial.println("FIBER > OFF");
+    digitalWrite(fiber_photo, LOW);
+    
     Serial.println("SESSION > END");
     Serial.println("SESSION STATISTICS");
     Serial.print("SESSION TOTAL SHUTTLINGS: "); Serial.println(TOTAL_AVOIDANCE_SUCCESS);
