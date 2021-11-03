@@ -379,7 +379,7 @@ void loop() {
     Serial.print("TONE PAIRED WITH SHOCK AT (SEC): "); Serial.println(TONE_DURATION - SHOCK_DURATION);
 
     // INITIATE FIBER PHOTOMETRY CLOCK (DATA COLLECTION START)
-    Serial.println("FIBER > ON");
+    Serial.println("FIBER CLOCK > START");
     digitalWrite(fiber_clock, HIGH);
 
     // SIGNAL START OF THE SESSION
@@ -765,7 +765,7 @@ void loop() {
     }
 
     // TERMINATE FIBER PHOTOMETRY CLOCK (DATA COLLECTION END)
-    Serial.println("FIBER > OFF");
+    Serial.println("FIBER CLOCK > END");
     digitalWrite(fiber_clock, LOW);
 
     // SESSION FINAL INFO AND STATISTICS
