@@ -357,7 +357,7 @@ void loop() {
 
   }
 
-  // TEST CHAMBER FOR USER
+  // TEST CHAMBER FOR USER (does not create a Serial output)
   if (digitalRead(test_button) == HIGH){
     // TEST LEDs
     digitalWrite(speaker_led_r, HIGH);
