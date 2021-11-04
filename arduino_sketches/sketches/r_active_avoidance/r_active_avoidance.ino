@@ -277,15 +277,12 @@ void setup() {
       delay(300);
 
       // Recover minimum values from readings
-      int x = Serial.parseInt();
-      if (x==2){
-        TEST_START = true;
-      }
+      START_SWITCH_STATE = LOW;
+      TEST_SWITCH_STATE = LOW;
 
-      if (TEST_START){
-        // Reset serial input from Bonsai
-        x = 0;
-        TEST_START = false;
+      TEST_SWITCH_STATE = digitalRead(test_button);
+
+      if (TEST_SWITCH_STATE){
 
         Serial.println("Minimum values: ");
         Serial.println("L1 L2 R1 R2");
