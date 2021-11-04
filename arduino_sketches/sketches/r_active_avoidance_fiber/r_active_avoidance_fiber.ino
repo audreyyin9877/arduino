@@ -87,6 +87,7 @@ const int check_green_LED = 27;
 
 // fiber photometry pins
 const int fiber_clock = 45;
+const int fiber_trial = 46;
 //##################################################################################################################
 // ANALOG PINS
 // Right Sensors
@@ -144,6 +145,7 @@ void setup() {
   pinMode(check_green_LED, OUTPUT);
 
   pinMode(fiber_clock, OUTPUT);
+  pinMode(fiber_trial, OUTPUT);
 
   /*
   // UNCOMMENT TO TEST SENSORS
@@ -419,6 +421,8 @@ void loop() {
 
       // PRINT INFORMATION ABOUT TRIAL
       Serial.print("TRIAL NUMBER "); Serial.print(x+1); Serial.println(" > START");
+      // Trial number marks beginning of fiber trial timekeeping
+      digitalWrite(fiber_trial, HIGH);
 
 
       // TRIAL ONE UNAVOID
@@ -483,6 +487,9 @@ void loop() {
 
         // INITIATE INTER-TRIAL-INTERVAL
         delay(ITI_DURATION*1000);
+
+        // Trial number marks end of fiber trial timekeeping
+        digitalWrite(fiber_trial, LOW);
 
         // PRINT EXIT INFORMATION ABOUT TRIAL
         // ###########################################################################
@@ -767,6 +774,9 @@ void loop() {
 
       // INITIATE INTER-TRIAL-INTERVAL
       delay(ITI_DURATION*1000);
+
+      // Trial number marks end of fiber trial timekeeping
+      digitalWrite(fiber_trial, LOW);
 
 
       // PRINT EXIT INFORMATION ABOUT TRIAL
