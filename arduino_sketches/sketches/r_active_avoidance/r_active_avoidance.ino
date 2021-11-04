@@ -275,12 +275,21 @@ void setup() {
         x = 0;
         TEST_START = false;
 
-        Serial.println("Minimum values: ");
+        Serial.println("Minimum values calculated: ");
         Serial.println("L1 L2 R1 R2");
         for (int i = 0; i < (sizeof(MIN_ARRAY) / sizeof(MIN_ARRAY[0])); i++){
           Serial.print(MIN_ARRAY[i]); Serial.print(" ");
         }
         Serial.println();
+
+        Serial.println("Current sensor values: "); 
+        Serial.println("L1 L2 R1 R2");
+        Serial.print(IR_SENSOR_L1.distance()); Serial.print(" ");
+        Serial.print(IR_SENSOR_L2.distance()); Serial.print(" ");
+        Serial.print(IR_SENSOR_R1.distance()); Serial.print(" ");
+        Serial.print(IR_SENSOR_R2.distance());
+        Serial.println();
+
         Serial.println("Sensor thresholds: ");
         Serial.println("L1 L2 R1 R2");
         for (int i = 0; i < (sizeof(MIN_ARRAY) / sizeof(MIN_ARRAY[0])); i++){
