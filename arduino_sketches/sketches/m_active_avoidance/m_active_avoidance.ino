@@ -403,7 +403,7 @@ void loop() {
     digitalWrite(shocker_l_pin, HIGH);
     delay(3000);
     digitalWrite(shocker_l_pin, LOW);
-    Serial.println("TEST SHOCKER > COMPLETE"); 
+    Serial.println("TEST SHOCKER > COMPLETE");
     delay(500);
 
     // TEST PIR SENSOR LEFT, THEN RIGHT
@@ -420,7 +420,7 @@ void loop() {
 
     // RESET SERIAL INPUT FROM BONSAI-RX
     x = 0;
-    TEST_START = false;
+    SESSION_START = false;
 
 
     // PRINT BASIC SESSION INFORMATION
