@@ -305,81 +305,64 @@ void setup() {
 
 void loop() {
 
-  bool SESSION_START = false;
-  bool TEST_START = false;
-
-  // TRIGGER START OF TRIAL VIA BONSAI-RX
-  int x = Serial.parseInt();
-  if (x == 1) {
-    SESSION_START = true;
-  } else if (x == 2) {
-    TEST_START = true;
-  } else {
-    // NOTHING
-  }
+  // bool SESSION_START = false;
+  // bool TEST_START = false;
+  //
+  // // TRIGGER START OF TRIAL VIA BONSAI-RX
+  // int x = Serial.parseInt();
+  // if (x == 1) {
+  //   SESSION_START = true;
+  // } else if (x == 2) {
+  //   TEST_START = true;
+  // } else {
+  //   // NOTHING
+  // }
 
 
   // TEST CHAMBER
-  if (TEST_START) {
+  if (digitalRead(test_button) == HIGH) {
 
-    // RESET SERIAL INPUT FROM BONSAI-RX
-    x = 0;
-    TEST_START = false;
+    // // RESET SERIAL INPUT FROM BONSAI-RX
+    // x = 0;
+    // TEST_START = false;
 
     // TEST LEDs
     Serial.println("TEST CHAMBER LEDs");
+    delay(500);
     digitalWrite(speaker_led_r, HIGH);
     digitalWrite(speaker_led_l, HIGH);
-    delay(3000);
+    delay(5000);
     digitalWrite(speaker_led_r, LOW);
     digitalWrite(speaker_led_l, LOW);
+    Serial.println("TEST CHAMBET LEDs > COMPLETE");
+    delay(500);
 
     // TEST TONE GENERATION
     Serial.println("TEST TONE GENERATION");
+    delay(500);
     SPEAKER_RIGHT.play(CS_FREQUENCY);
     SPEAKER_LEFT.play(CS_FREQUENCY);
-    delay(3000);
+    delay(10000);
     SPEAKER_RIGHT.stop();
     SPEAKER_LEFT.stop();
+    Serial.println("TEST TONE GENERATION > COMPLETE");
+    delay(500);
 
     // TEST SHOCK GENERATION LEFT, THEN RIGHT
     Serial.println("TEST SHOCKER");
     Serial.println("RIGHT SIDE");
+    delay(500);
     digitalWrite(shocker_r_pin, HIGH);
-    delay(3000);
+    delay(5000);
     digitalWrite(shocker_r_pin, LOW);
     Serial.println("LEFT SIDE");
+    delay(500);
     digitalWrite(shocker_l_pin, HIGH);
-    delay(3000);
+    delay(5000);
     digitalWrite(shocker_l_pin, LOW);
+    Serial.println("TEST SHOCKER > COMPLETE");
+    delay(500);
 
-    // TEST PIR SENSOR LEFT, THEN RIGHT
-
-  }
-
-  // TEST CHAMBER FOR USER (does not create a Serial output)
-  if (digitalRead(test_button) == HIGH){
-    // TEST LEDs
-    digitalWrite(speaker_led_r, HIGH);
-    digitalWrite(speaker_led_l, HIGH);
-    delay(3000);
-    digitalWrite(speaker_led_r, LOW);
-    digitalWrite(speaker_led_l, LOW);
-
-    // TEST TONE GENERATION
-    SPEAKER_RIGHT.play(CS_FREQUENCY);
-    SPEAKER_LEFT.play(CS_FREQUENCY);
-    delay(3000);
-    SPEAKER_RIGHT.stop();
-    SPEAKER_LEFT.stop();
-
-    // TEST SHOCK GENERATION LEFT, THEN RIGHT
-    digitalWrite(shocker_r_pin, HIGH);
-    delay(3000);
-    digitalWrite(shocker_r_pin, LOW);
-    digitalWrite(shocker_l_pin, HIGH);
-    delay(3000);
-    digitalWrite(shocker_l_pin, LOW);
   }
 
   // RESET CUMMULATIVE VARIABLE VALUES
