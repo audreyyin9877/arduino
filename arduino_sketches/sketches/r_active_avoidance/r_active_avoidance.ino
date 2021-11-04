@@ -275,12 +275,21 @@ void setup() {
         x = 0;
         TEST_START = false;
 
-        Serial.println("Minimum values: ");
+        Serial.println("Minimum values calculated: ");
         Serial.println("L1 L2 R1 R2");
         for (int i = 0; i < (sizeof(MIN_ARRAY) / sizeof(MIN_ARRAY[0])); i++){
           Serial.print(MIN_ARRAY[i]); Serial.print(" ");
         }
         Serial.println();
+
+        Serial.println("Current sensor values: "); 
+        Serial.println("L1 L2 R1 R2");
+        Serial.print(IR_SENSOR_L1.distance()); Serial.print(" ");
+        Serial.print(IR_SENSOR_L2.distance()); Serial.print(" ");
+        Serial.print(IR_SENSOR_R1.distance()); Serial.print(" ");
+        Serial.print(IR_SENSOR_R2.distance());
+        Serial.println();
+
         Serial.println("Sensor thresholds: ");
         Serial.println("L1 L2 R1 R2");
         for (int i = 0; i < (sizeof(MIN_ARRAY) / sizeof(MIN_ARRAY[0])); i++){
@@ -321,32 +330,39 @@ void loop() {
 
     // TEST LEDs
     Serial.println("TEST CHAMBER LEDs");
+    delay(500);
     digitalWrite(speaker_led_r, HIGH);
     digitalWrite(speaker_led_l, HIGH);
-    delay(3000);
+    delay(5000);
     digitalWrite(speaker_led_r, LOW);
     digitalWrite(speaker_led_l, LOW);
+    Serial.println("TEST CHAMBER LEDs > COMPLETE");
+    delay(500);
 
     // TEST TONE GENERATION
     Serial.println("TEST TONE GENERATION");
+    delay(500);
     SPEAKER_RIGHT.play(CS_FREQUENCY);
     SPEAKER_LEFT.play(CS_FREQUENCY);
-    delay(3000);
+    delay(10000);
     SPEAKER_RIGHT.stop();
     SPEAKER_LEFT.stop();
+    Serial.println("TEST TONE GENERATION > COMPLETE");
+    delay(500);
 
     // TEST SHOCK GENERATION LEFT, THEN RIGHT
     Serial.println("TEST SHOCKER");
+    delay(500);
     Serial.println("RIGHT SIDE");
     digitalWrite(shocker_r_pin, HIGH);
-    delay(3000);
+    delay(5000);
     digitalWrite(shocker_r_pin, LOW);
     Serial.println("LEFT SIDE");
     digitalWrite(shocker_l_pin, HIGH);
-    delay(3000);
+    delay(5000);
     digitalWrite(shocker_l_pin, LOW);
-
-    // TEST PIR SENSOR LEFT, THEN RIGHT
+    Serial.println("TEST SHOCKER > COMPLETE");
+    delay(500);
 
   }
 
@@ -360,7 +376,7 @@ void loop() {
 
     // RESET SERIAL INPUT FROM BONSAI-RX
     x = 0;
-    TEST_START = false;
+    SESSION_START = false;
 
 
     // PRINT BASIC SESSION INFORMATION

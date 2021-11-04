@@ -2,7 +2,6 @@
  * LeDoux Lab - DEC 2021
  * jose [dot] cruz [at] nyu [dot] edu
  * ay2376 [at] nyu [dot] edu
- * snm427 [at] nyu [dot] edu
  */
 
 
@@ -13,16 +12,15 @@
  #include <Tone.h>
 
 
-/*
-    VARIABLES
-*/
+ /*
+     VARIABLES
+ */
 //##################################################################################################################
-// EXPERIMENTAL VARIABLES
 const int N_TRIALS = 20;
 unsigned long ACCLIMATION_DURATION = 20;                       // SECONDS
 unsigned long TONE_DURATION = 15;                              // SECONDS
 unsigned long SHOCK_DURATION = 1;                              // SECONDS
-int CS_FREQUENCY = 5000;                                       // IN HERTZ
+int CS_FREQUENCY = 5000;                                  // IN HERTZ
 int ITI_INTERVALS[] = {40, 60, 80, 100, 120};                  // list of the inter-trial-intervals: ITI
 unsigned long MOTION_DETECTION_DURATION = 30;                  // SECONDS
 //##################################################################################################################
@@ -41,7 +39,7 @@ const long BLINK_INTERVAL = 1000;
 int YELLOW_STATE = LOW;
 //##################################################################################################################
 // LOCATION VARIABLES
-int LEFT_ACTIVE;                                               // HIGH IF A COMPARTMENT IS ACTIVE, ELSE LOW
+int LEFT_ACTIVE;                                        // HIGH IF A COMPARTMENT IS ACTIVE, ELSE LOW
 int RIGHT_ACTIVE;
 //##################################################################################################################
 // TIMING VARIABLES
@@ -63,7 +61,6 @@ float ESCAPE_LATENCY_CUMULATIVE;
 // SESSION
 int TOTAL_AVOIDANCE_SUCCESS = 0;                           // CUMULATIVE COUNT OF SUCCESSFUL AVOIDANCE RESPONSES
 int TOTAL_AVOIDANCE_FAILURE = 0;                           // CUMULATIVE COUNT OF FAILED AVOIDANCE RESPONSES
-//##################################################################################################################
 
 
 /*
@@ -71,9 +68,6 @@ int TOTAL_AVOIDANCE_FAILURE = 0;                           // CUMULATIVE COUNT O
 */
 //##################################################################################################################
 // DIGITAL PINS
-// Speakers
-const int speaker_pin = 3;
-
 // Shockers
 const int shocker_r_pin = 4;
 const int shocker_l_pin = 5;
@@ -82,27 +76,27 @@ const int shocker_l_pin = 5;
 const int buzzer_pin_r = 6;
 const int buzzer_pin_l = 7;
 
-// IR LED Lights
+// IR LED lights
 const int speaker_led_r = 9;
 const int speaker_led_l = 10;
 
 // LED Check Lights (for UX design)
-const int check_red_LED = 47;
-const int check_yellow_LED = 49;
-const int check_green_LED = 51;
+const int check_red_LED = 23;
+const int check_yellow_LED = 25;
+const int check_green_LED = 27;
+
+// fiber photometry
+const int fiber_clock = 45;
+const int fiber_trial = 46;
 //##################################################################################################################
 // ANALOG PINS
 // Right Sensors
-#define ir_right A0
-#define ir_right2 A2
-#define ir_right3 A4
-#define ir_right4 A6
+#define ir_right1 A0
+#define ir_left1 A1
 
 // Left Sensors
-#define ir_left A1
+#define ir_right2 A2
 #define ir_left2 A3
-#define ir_left3 A5
-#define ir_left4 A7
 //##################################################################################################################
 
 
@@ -118,30 +112,15 @@ Tone SPEAKER_LEFT;
 #define model 1080
 
 // Right Sensors
-SharpIR IR_SENSOR_R1 = SharpIR(ir_right, model);
-SharpIR IR_SENSOR_R2 = SharpIR(ir_right2, model);
-SharpIR IR_SENSOR_R3 = SharpIR(ir_right3, model);
-SharpIR IR_SENSOR_R4 = SharpIR(ir_right4, model);
+SharpIR IR_SENSOR_R1 = SharpIR(ir_right1, model);
+SharpIR IR_SENSOR_L1 = SharpIR(ir_left1, model);
 
 // Left Sensors
-SharpIR IR_SENSOR_L1 = SharpIR(ir_left, model);
+SharpIR IR_SENSOR_R2 = SharpIR(ir_right2, model);
 SharpIR IR_SENSOR_L2 = SharpIR(ir_left2, model);
-SharpIR IR_SENSOR_L3 = SharpIR(ir_left3, model);
-SharpIR IR_SENSOR_L4 = SharpIR(ir_left4, model);
 
 // SENSOR THRESHOLDS
-const int IR_THRESHOLD_L1 = 19;
-const int IR_THRESHOLD_L2 = 18;
-const int IR_THRESHOLD_L3 = 18;
-const int IR_THRESHOLD_L4 = 20;
-
-const int IR_THRESHOLD_R1 = 22;
-const int IR_THRESHOLD_R2 = 21;
-const int IR_THRESHOLD_R3 = 22;
-const int IR_THRESHOLD_R4 = 19;
-
-unsigned int IR_THRESHOLDS[] = {IR_THRESHOLD_L1, IR_THRESHOLD_L2, IR_THRESHOLD_L3, IR_THRESHOLD_L4,
-                                IR_THRESHOLD_R1, IR_THRESHOLD_R2, IR_THRESHOLD_R3, IR_THRESHOLD_R4};
+int IF_THRESHOLD = 20;                                   // CM > DISTANCE FROM SENSOR TO OPPOSITE WALL.
 //##################################################################################################################
 
 
@@ -151,6 +130,7 @@ void setup() {
   // INITIATE SERIAL
   Serial.begin(9600);
 
+  // ASSIGN PINS
   SPEAKER_RIGHT.begin(buzzer_pin_r);
   SPEAKER_LEFT.begin(buzzer_pin_l);
 
@@ -163,6 +143,24 @@ void setup() {
   pinMode(check_red_LED, OUTPUT);
   pinMode(check_yellow_LED, OUTPUT);
   pinMode(check_green_LED, OUTPUT);
+
+  pinMode(fiber_clock, OUTPUT);
+  pinMode(fiber_trial, OUTPUT);
+
+  /*
+  // UNCOMMENT TO TEST SENSORS
+  while (true) {
+    Serial.print("L1: ");
+    Serial.println(IR_SENSOR_L1.distance());
+    Serial.print("L2: ");
+    Serial.println(IR_SENSOR_L2.distance());
+    Serial.print("R1: ");
+    Serial.println(IR_SENSOR_R1.distance());
+    Serial.print("R2: ");
+    Serial.println(IR_SENSOR_R2.distance());
+    delay(1000);
+  }
+  /**/
 
   // PRINT ENTRY MESSAGE
   delay(5000);
@@ -184,29 +182,21 @@ void setup() {
   Serial.println("COLLECTING AND EVALUATING SENSOR READINGS...");
   Serial.println();
 
-  // COLLECT 400 SENSOR READINGS
+  // COLLECT 400 SENSOR readings
   // Create empty arrays
   unsigned int CHECK_R1[_NUM_READINGS];
   unsigned int CHECK_R2[_NUM_READINGS];
-  unsigned int CHECK_R3[_NUM_READINGS];
-  unsigned int CHECK_R4[_NUM_READINGS];
 
   unsigned int CHECK_L1[_NUM_READINGS];
   unsigned int CHECK_L2[_NUM_READINGS];
-  unsigned int CHECK_L3[_NUM_READINGS];
-  unsigned int CHECK_L4[_NUM_READINGS];
 
   // Fill arrays
   for (int i = 0; i < _NUM_READINGS; i++){
     CHECK_R1[i] = IR_SENSOR_R1.distance();
     CHECK_R2[i] = IR_SENSOR_R2.distance();
-    CHECK_R3[i] = IR_SENSOR_R3.distance();
-    CHECK_R4[i] = IR_SENSOR_R4.distance();
 
     CHECK_L1[i] = IR_SENSOR_L1.distance();
     CHECK_L2[i] = IR_SENSOR_L2.distance();
-    CHECK_L3[i] = IR_SENSOR_L3.distance();
-    CHECK_L4[i] = IR_SENSOR_L4.distance();
 
     // Blink yellow LED
     unsigned long YELLOW_LED_START_TIME = millis();
@@ -219,42 +209,35 @@ void setup() {
       }
       digitalWrite(check_yellow_LED, YELLOW_STATE);
     }
+
   }
 
   // FIND MIN VALUES
   // Create min variables
   unsigned int MIN_R1 = CHECK_R1[0];
   unsigned int MIN_R2 = CHECK_R2[0];
-  unsigned int MIN_R3 = CHECK_R3[0];
-  unsigned int MIN_R4 = CHECK_R4[0];
 
   unsigned int MIN_L1 = CHECK_L1[0];
   unsigned int MIN_L2 = CHECK_L2[0];
-  unsigned int MIN_L3 = CHECK_L3[0];
-  unsigned int MIN_L4 = CHECK_L4[0];
 
   for (int i = 0; i < _NUM_READINGS; i++){
     // Documentation: https://www.arduino.cc/reference/en/language/functions/math/min/
     MIN_R1 = min(CHECK_R1[i], MIN_R1);
     MIN_R2 = min(CHECK_R2[i], MIN_R2);
-    MIN_R3 = min(CHECK_R3[i], MIN_R3);
-    MIN_R4 = min(CHECK_R4[i], MIN_R4);
 
     MIN_L1 = min(CHECK_L1[i], MIN_L1);
     MIN_L2 = min(CHECK_L2[i], MIN_L2);
-    MIN_L3 = min(CHECK_L3[i], MIN_L3);
-    MIN_L4 = min(CHECK_L4[i], MIN_L4);
   }
 
   // COMPARE MIN VALUES WITH IR THRESHOLDS SET
-  unsigned int MIN_ARRAY[8] = {MIN_L1, MIN_L2, MIN_L3, MIN_L4,
-                              MIN_R1, MIN_R2, MIN_R3, MIN_R4};
+  unsigned int MIN_ARRAY[4] = {MIN_L1, MIN_L2,
+                              MIN_R1, MIN_R2};
 
   for (int i = 0; i < (sizeof(MIN_ARRAY) / sizeof(MIN_ARRAY[0])); i++){
     // The minimum found using 400 values is always greater than the true minimum.
     // We subtract 2 from the minimum found using 400 values to approximate the true minimum.
     MIN_ARRAY[i] -= 2;
-    if (MIN_ARRAY[i] < IR_THRESHOLDS[i]){
+    if (MIN_ARRAY[i] < IF_THRESHOLD){
       TEST_PASS = false;
     }
   }
@@ -300,24 +283,15 @@ void setup() {
         TEST_START = false;
 
         Serial.println("Minimum values: ");
-        Serial.println("L1 L2 L3 L4 R1 R2 R3 R4");
+        Serial.println("L1 L2 R1 R2");
         for (int i = 0; i < (sizeof(MIN_ARRAY) / sizeof(MIN_ARRAY[0])); i++){
           Serial.print(MIN_ARRAY[i]); Serial.print(" ");
         }
         Serial.println();
-
-        Serial.println("Current sensor values: ");
-        Serial.println("L1 L2 R1 R2");
-        Serial.print(IR_SENSOR_L1.distance()); Serial.print(" ");
-        Serial.print(IR_SENSOR_L2.distance()); Serial.print(" ");
-        Serial.print(IR_SENSOR_R1.distance()); Serial.print(" ");
-        Serial.print(IR_SENSOR_R2.distance());
-        Serial.println();
-
         Serial.println("Sensor thresholds: ");
-        Serial.println("L1 L2 L3 L4 R1 R2 R3 R4");
-        for (int i = 0; i < (sizeof(IR_THRESHOLDS) / sizeof(IR_THRESHOLDS[0])); i++){
-          Serial.print(IR_THRESHOLDS[i]); Serial.print(" ");
+        Serial.println("L1 L2 R1 R2");
+        for (int i = 0; i < (sizeof(MIN_ARRAY) / sizeof(MIN_ARRAY[0])); i++){
+          Serial.print(IF_THRESHOLD); Serial.print(" ");
         }
         Serial.println();
       }
@@ -326,33 +300,6 @@ void setup() {
   } else {
     digitalWrite(check_yellow_LED, HIGH);
   }
-
-  /*
-  // TEST SENSORS
-  // uncomment when you want to test
-  while (true){
-    Serial.print("Left 1: ");
-    Serial.println(IR_SENSOR_L1.distance());
-    Serial.print("Left 2: ");
-    Serial.println(IR_SENSOR_L2.distance());
-    Serial.print("Left 3: ");
-    Serial.println(IR_SENSOR_L3.distance());
-    Serial.print("Left 4: ");
-    Serial.println(IR_SENSOR_L4.distance());
-
-    Serial.print("Right 1: ");
-    Serial.println(IR_SENSOR_R1.distance());
-    Serial.print("Right 2: ");
-    Serial.println(IR_SENSOR_R2.distance());
-    Serial.print("Right 3: ");
-    Serial.println(IR_SENSOR_R3.distance());
-    Serial.print("Right 4: ");
-    Serial.println(IR_SENSOR_R4.distance());
-
-    delay(2000);
-    }
-    /**/
-
 
 }
 
@@ -381,29 +328,22 @@ void loop() {
 
     // TEST LEDs
     Serial.println("TEST CHAMBER LEDs");
-    delay(500);
     digitalWrite(speaker_led_r, HIGH);
     digitalWrite(speaker_led_l, HIGH);
     delay(3000);
     digitalWrite(speaker_led_r, LOW);
     digitalWrite(speaker_led_l, LOW);
-    Serial.println("TEST CHAMBER LEDs > COMPLETE");
-    delay(500);
 
     // TEST TONE GENERATION
     Serial.println("TEST TONE GENERATION");
-    delay(500);
     SPEAKER_RIGHT.play(CS_FREQUENCY);
     SPEAKER_LEFT.play(CS_FREQUENCY);
     delay(3000);
     SPEAKER_RIGHT.stop();
     SPEAKER_LEFT.stop();
-    Serial.println("TEST TONE GENERATION > COMPLETE");
-    delay(500);
 
     // TEST SHOCK GENERATION LEFT, THEN RIGHT
     Serial.println("TEST SHOCKER");
-    delay(500);
     Serial.println("RIGHT SIDE");
     digitalWrite(shocker_r_pin, HIGH);
     delay(3000);
@@ -412,8 +352,6 @@ void loop() {
     digitalWrite(shocker_l_pin, HIGH);
     delay(3000);
     digitalWrite(shocker_l_pin, LOW);
-    Serial.println("TEST SHOCKER > COMPLETE");
-    delay(500);
 
     // TEST PIR SENSOR LEFT, THEN RIGHT
 
@@ -429,7 +367,7 @@ void loop() {
 
     // RESET SERIAL INPUT FROM BONSAI-RX
     x = 0;
-    SESSION_START = false;
+    TEST_START = false;
 
 
     // PRINT BASIC SESSION INFORMATION
@@ -439,6 +377,10 @@ void loop() {
     Serial.print("TONE DURATION (SEC): "); Serial.println(TONE_DURATION);
     Serial.print("SHOCK DURATION (SEC): "); Serial.println(SHOCK_DURATION);
     Serial.print("TONE PAIRED WITH SHOCK AT (SEC): "); Serial.println(TONE_DURATION - SHOCK_DURATION);
+
+    // INITIATE FIBER PHOTOMETRY CLOCK (DATA COLLECTION START)
+    Serial.println("FIBER CLOCK > START");
+    digitalWrite(fiber_clock, HIGH);
 
     // SIGNAL START OF THE SESSION
     for (int x = 0; x < 5; x ++) {
@@ -462,7 +404,9 @@ void loop() {
     for (int x = 0; x < N_TRIALS; x++) {
 
       // PRINT INFORMATION ABOUT TRIAL
-      Serial.print("TRIAL NUMBER "); Serial.print(x+1); Serial.println(" > START");
+      Serial.print("TRIAL "); Serial.print(x+1); Serial.println(" > START");
+      // Trial number marks beginning of fiber trial timekeeping
+      digitalWrite(fiber_trial, HIGH);
 
 
       // TRIAL ONE UNAVOID
@@ -544,28 +488,25 @@ void loop() {
 
       }
 
-      // START TIME FOR MOTION DETECTION FEATURE
+      // BEGIN MOTION DETECTION TIMER
       MOTION_DETECTION_START = millis();
 
       // DETECT POSITION, DELIVER CS AND US
       while (true) {
 
-        if (IR_SENSOR_R1.distance() < IR_THRESHOLD_R1 ||
-        IR_SENSOR_R2.distance() < IR_THRESHOLD_R2 ||
-        IR_SENSOR_R3.distance() < IR_THRESHOLD_R3 ||
-        IR_SENSOR_R4.distance() < IR_THRESHOLD_R4) {
+        if (IR_SENSOR_R1.distance() < IF_THRESHOLD
+            || IR_SENSOR_R2.distance() < IF_THRESHOLD) {
           RIGHT_ACTIVE = HIGH;
           LEFT_ACTIVE = LOW;
-        } else if (IR_SENSOR_L1.distance() < IR_THRESHOLD_L1 ||
-        IR_SENSOR_L2.distance() < IR_THRESHOLD_L2 ||
-        IR_SENSOR_L3.distance() < IR_THRESHOLD_L3 ||
-        IR_SENSOR_L4.distance() < IR_THRESHOLD_L4) {
+        } else if (IR_SENSOR_L1.distance() < IF_THRESHOLD
+                   || IR_SENSOR_L2.distance() < IF_THRESHOLD) {
           LEFT_ACTIVE = HIGH;
           RIGHT_ACTIVE = LOW;
         } else {
           RIGHT_ACTIVE = LOW;
           LEFT_ACTIVE = LOW;
-          // END TIME FOR MOTION DETECTION FEATURE
+
+          // END MOTION DETECTION TIMER
           MOTION_DETECTION_CURR = millis();
         }
 
@@ -601,9 +542,8 @@ void loop() {
           while (true) {
 
             // CHECK IF LEFT IS ACTIVE
-            if (IR_SENSOR_L1.distance() < IR_THRESHOLD_L1 ||
-            IR_SENSOR_L2.distance() < IR_THRESHOLD_L2 ||
-            IR_SENSOR_L3.distance() < IR_THRESHOLD_L3) {
+            if (IR_SENSOR_L1.distance() < IF_THRESHOLD
+                || IR_SENSOR_L2.distance() < IF_THRESHOLD) {
               LEFT_ACTIVE = HIGH;
               RIGHT_ACTIVE = LOW;
             } else {
@@ -702,9 +642,8 @@ void loop() {
           while (true) {
 
             // CHECK IF RIGHT IS ACTIVE
-            if (IR_SENSOR_R2.distance() < IR_THRESHOLD_R2 ||
-            IR_SENSOR_R3.distance() < IR_THRESHOLD_R3 ||
-            IR_SENSOR_R4.distance() < IR_THRESHOLD_R4) {
+            if (IR_SENSOR_R1.distance() < IF_THRESHOLD
+                || IR_SENSOR_R2.distance() < IF_THRESHOLD) {
               RIGHT_ACTIVE = HIGH;
               LEFT_ACTIVE = LOW;
             } else {
@@ -777,7 +716,7 @@ void loop() {
 
 
         } else if (!LEFT_ACTIVE && !RIGHT_ACTIVE
-                   && (MOTION_DETECTION_CURR - MOTION_DETECTION_START) >= (MOTION_DETECTION_DURATION * 1000)){
+                  && (MOTION_DETECTION_CURR - MOTION_DETECTION_START) >= (MOTION_DETECTION_DURATION * 1000)){
             // SERIAL OUTPUT MESSAGE TO USER
             Serial.println("MOTION DETECTION FAILED");
             Serial.print("NO MOTION DETECTED IN "); Serial.print(MOTION_DETECTION_DURATION); Serial.println(" SECONDS");
@@ -827,6 +766,10 @@ void loop() {
 
     }
 
+    // TERMINATE FIBER PHOTOMETRY CLOCK (DATA COLLECTION END)
+    Serial.println("FIBER CLOCK > END");
+    digitalWrite(fiber_clock, LOW);
+
     // SESSION FINAL INFO AND STATISTICS
     // ###########################################################################
     Serial.println("SESSION > END");
@@ -839,13 +782,14 @@ void loop() {
       Serial.print("SESSION MEAN SHUTTLING LATENCY (SEC): "); Serial.println((float)ESCAPE_LATENCY_CUMULATIVE / (float)TOTAL_AVOIDANCE_SUCCESS);
     }
 
-  // CHANGE LED TO INDICATE RESET STATUS
-  digitalWrite(check_green_LED, LOW);
-  digitalWrite(check_red_LED, HIGH);
+    // CHANGE LED TO INDICATE RESET STATUS
+    digitalWrite(check_green_LED, LOW);
+    digitalWrite(check_red_LED, HIGH);
 
-  while(true){
+    while(true){
     // DO NOTHING. CAUSES PROGRAM TO ENTER AN ENDLESS LOOP AND STALL, FORCING USER TO RESTART
-  }
+    }
+
 
   }
 
