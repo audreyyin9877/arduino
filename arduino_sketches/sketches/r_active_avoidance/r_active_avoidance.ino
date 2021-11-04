@@ -357,13 +357,38 @@ void loop() {
 
   }
 
+  // TEST CHAMBER FOR USER
+  if (digitalRead(test_button) == HIGH){
+    // TEST LEDs
+    digitalWrite(speaker_led_r, HIGH);
+    digitalWrite(speaker_led_l, HIGH);
+    delay(3000);
+    digitalWrite(speaker_led_r, LOW);
+    digitalWrite(speaker_led_l, LOW);
+
+    // TEST TONE GENERATION
+    SPEAKER_RIGHT.play(CS_FREQUENCY);
+    SPEAKER_LEFT.play(CS_FREQUENCY);
+    delay(3000);
+    SPEAKER_RIGHT.stop();
+    SPEAKER_LEFT.stop();
+
+    // TEST SHOCK GENERATION LEFT, THEN RIGHT
+    digitalWrite(shocker_r_pin, HIGH);
+    delay(3000);
+    digitalWrite(shocker_r_pin, LOW);
+    digitalWrite(shocker_l_pin, HIGH);
+    delay(3000);
+    digitalWrite(shocker_l_pin, LOW);
+  }
+
   // RESET CUMMULATIVE VARIABLE VALUES
   TOTAL_AVOIDANCE_FAILURE = 0;
   TOTAL_AVOIDANCE_SUCCESS = 0;
   ESCAPE_LATENCY_CUMULATIVE = 0;
 
   // START SESSION
-  if (SESSION_START) {
+  if (digitalRead(start_button) == HIGH) {
 
     // RESET SERIAL INPUT FROM BONSAI-RX
     x = 0;
