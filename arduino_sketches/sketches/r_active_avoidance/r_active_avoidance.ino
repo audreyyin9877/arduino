@@ -367,7 +367,7 @@ void loop() {
 
     // RESET SERIAL INPUT FROM BONSAI-RX
     x = 0;
-    TEST_START = false;
+    SESSION_START = false;
 
 
     // PRINT BASIC SESSION INFORMATION
