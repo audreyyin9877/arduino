@@ -38,6 +38,10 @@ unsigned long YELLOW_LED_END_TIME = 0;
 const long BLINK_INTERVAL = 1000;
 int YELLOW_STATE = LOW;
 //##################################################################################################################
+// START SESSION AND TEST SESSION VARIABLES
+int TEST_SWITCH_STATE = LOW; 
+int START_SWITCH_STATE = LOW; 
+//##################################################################################################################
 // LOCATION VARIABLES
 int LEFT_ACTIVE;                                        // HIGH IF A COMPARTMENT IS ACTIVE, ELSE LOW
 int RIGHT_ACTIVE;
@@ -162,6 +166,7 @@ void setup() {
   }
   /**/
 
+  /**/
   // PRINT ENTRY MESSAGE
   delay(5000);
   Serial.println("***CHECK SENSOR READINGS***");
@@ -300,6 +305,7 @@ void setup() {
   } else {
     digitalWrite(check_yellow_LED, HIGH);
   }
+  */
 
 }
 
@@ -318,9 +324,27 @@ void loop() {
   //   // NOTHING
   // }
 
+  // START TRIAL
+  TEST_SWITCH_STATE = LOW; 
+  START_SWITCH_STATE = LOW;
+
+  TEST_SWITCH_STATE = digitalRead(test_button); 
+  START_SWITCH_STATE = digitalRead(start_button);
 
   // TEST CHAMBER
-  if (digitalRead(test_button) == HIGH) {
+  if (TEST_SWITCH_STATE == HIGH) {
+    
+    unsigned long press_button_start = millis();
+    unsigned long press_button_current = millis();
+
+    // LOOP FOR ONE SECOND 
+    while (press_button_current - press_button_start < 1000L) {
+      press_button_current = millis();
+      TEST_SWITCH_STATE = digitalRead(test_button); // IF STATE IS STILL HIGH AFTER ONE SECOND, INITIATE THE FOLLOWING LOOP 
+    }
+  }
+  
+  if (TEST_SWITCH_STATE) {
 
     // // RESET SERIAL INPUT FROM BONSAI-RX
     // x = 0;
@@ -371,11 +395,24 @@ void loop() {
   ESCAPE_LATENCY_CUMULATIVE = 0;
 
   // START SESSION
-  if (digitalRead(start_button) == HIGH) {
 
-    // RESET SERIAL INPUT FROM BONSAI-RX
-    x = 0;
-    TEST_START = false;
+  if (START_SWITCH_STATE == HIGH) {
+    
+    unsigned long press_button_start = millis();
+    unsigned long press_button_current = millis();
+
+    // LOOP FOR ONE SECOND 
+    while (press_button_current - press_button_start < 1000L) {
+      press_button_current = millis();
+      START_SWITCH_STATE = digitalRead(start_button); // IF STATE IS STILL HIGH AFTER ONE SECOND, INITIATE THE FOLLOWING LOOP 
+    }
+  }
+  
+  if (START_SWITCH_STATE) {
+
+//    // RESET SERIAL INPUT FROM BONSAI-RX
+//    x = 0;
+//    TEST_START = false;
 
 
     // PRINT BASIC SESSION INFORMATION
