@@ -84,6 +84,10 @@ const int speaker_led_l = 10;
 const int check_red_LED = 23;
 const int check_yellow_LED = 25;
 const int check_green_LED = 27;
+
+// buttons for TEST_SESSION and START_SESSION
+const int test_button = 38;
+const int start_button = 39;
 //##################################################################################################################
 // ANALOG PINS
 // Right Sensors
@@ -139,6 +143,9 @@ void setup() {
   pinMode(check_red_LED, OUTPUT);
   pinMode(check_yellow_LED, OUTPUT);
   pinMode(check_green_LED, OUTPUT);
+
+  pinMode(test_button, INPUT);
+  pinMode(start_button, INPUT);
 
   /*
   // UNCOMMENT TO TEST SENSORS
