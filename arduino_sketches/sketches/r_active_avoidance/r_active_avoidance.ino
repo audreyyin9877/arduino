@@ -166,7 +166,7 @@ void setup() {
   }
   /**/
 
-  /*
+  
   // PRINT ENTRY MESSAGE
   delay(5000);
   Serial.println("***CHECK SENSOR READINGS***");
