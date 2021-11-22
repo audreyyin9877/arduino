@@ -20,9 +20,11 @@ const int N_TRIALS = 20;
 unsigned long ACCLIMATION_DURATION = 20;                       // SECONDS
 unsigned long TONE_DURATION = 15;                              // SECONDS
 unsigned long SHOCK_DURATION = 1;                              // SECONDS
-int CS_FREQUENCY = 5000;                                  // IN HERTZ
+int CS_FREQUENCY = 5000;                                       // IN HERTZ
 int ITI_INTERVALS[] = {40, 60, 80, 100, 120};                  // list of the inter-trial-intervals: ITI
 unsigned long MOTION_DETECTION_DURATION = 30;                  // SECONDS
+const int OPTO_FULL_DURATION = 5;                              // SECONDS
+const int OPTO_FLICKER_DURATION = 20;                          // MS. Due to lag, the true flicker duration is 24-25ms
 //##################################################################################################################
 //##################################################################################################################
 //##################################################################################################################
@@ -51,6 +53,18 @@ unsigned long ITI_DURATION;
 // For control of motion detection
 unsigned long MOTION_DETECTION_START;
 unsigned long MOTION_DETECTION_CURR;
+//##################################################################################################################
+// OPTOGENETICS VARIABLES
+// Timing variables for optogenetics
+unsigned long OPTO_START;
+unsigned long OPTO_CURRENT;
+int OPTO_STATE = LOW;
+
+unsigned long OPTO_FLICKER_START;
+unsigned long OPTO_FLICKER_PREVIOUS = 0;
+
+unsigned long OPTO_START_TIMESTAMP;
+unsigned long OPTO_END_TIMESTAMP;
 //##################################################################################################################
 // VARIABLES FOR STATISTICS
 unsigned long ESCAPE_LATENCY_START;
@@ -84,6 +98,9 @@ const int speaker_led_l = 10;
 const int check_red_LED = 23;
 const int check_yellow_LED = 25;
 const int check_green_LED = 27;
+
+// Optogenetics
+const int opto_LED = 12;
 //##################################################################################################################
 // ANALOG PINS
 // Right Sensors
@@ -139,6 +156,8 @@ void setup() {
   pinMode(check_red_LED, OUTPUT);
   pinMode(check_yellow_LED, OUTPUT);
   pinMode(check_green_LED, OUTPUT);
+
+  pinMode(opto_LED, OUTPUT);
 
   /*
   // UNCOMMENT TO TEST SENSORS
@@ -282,7 +301,7 @@ void setup() {
         }
         Serial.println();
 
-        Serial.println("Current sensor values: "); 
+        Serial.println("Current sensor values: ");
         Serial.println("L1 L2 R1 R2");
         Serial.print(IR_SENSOR_L1.distance()); Serial.print(" ");
         Serial.print(IR_SENSOR_L2.distance()); Serial.print(" ");
