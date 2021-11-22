@@ -383,6 +383,13 @@ void loop() {
     Serial.println("TEST SHOCKER > COMPLETE");
     delay(500);
 
+    // TEST OPTOGENETICS LED
+    Serial.println("TEST OPTOGENETICS LED");
+    digitalWrite(opto_LED, HIGH);
+    delay(5000);
+    digitalWrite(opto_LED, LOW);
+    Serial.println("TEST OPTOGENETICS > COMPLETE");
+
   }
 
   // RESET CUMMULATIVE VARIABLE VALUES
