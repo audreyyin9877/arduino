@@ -555,10 +555,20 @@ void loop() {
           ESCAPE_LATENCY_START = millis();
 
           // TURN LED ON IN BOTH SIDES
-          digitalWrite(speaker_led_r, HIGH); digitalWrite(speaker_led_l, HIGH);
+          digitalWrite(speaker_led_r, HIGH);
+          digitalWrite(speaker_led_l, HIGH);
 
+          // BEGIN TIMER FOR TONE DURATION (14 sec, 1 sec shock)
           START_TONE = millis();
           CURRENT_TONE_DELAY = millis();
+
+          // BEGIN TIMER FOR OPTOGENETICS LED
+          OPTO_START = millis();
+          OPTO_CURRENT = millis();
+
+          // RESETTING OPTOGENETICS TIMESTAMP VARIABLES
+          OPTO_START_TIMESTAMP = 0;
+          OPTO_END_TIMESTAMP = 0;
 
           // ADD 0.5 SEC DELAY TO AVOID SENSOR DETECTION ARTIFACTS
           unsigned long S_DELAY_START = millis();
@@ -569,6 +579,34 @@ void loop() {
 
           // WHILE THE OPPOSITE COMPARTMENT IS NOT ACTIVE, CONTINUE FOR TONE_DURATION
           while (true) {
+
+            // OPTOGENETICS PROTOCOL
+            OPTO_CURRENT = millis();
+            OPTO_FLICKER_START = millis();
+            // TURN ON LED OPTOGENETICS FOR OPTO_FULL_DURATION
+            if ((OPTO_CURRENT - OPTO_START) < (OPTO_FULL_DURATION * 1000)){
+              if (OPTO_FLICKER_START - OPTO_FLICKER_PREVIOUS >= OPTO_FLICKER_DURATION){
+                OPTO_FLICKER_PREVIOUS = OPTO_FLICKER_START;
+
+                if (OPTO_STATE == LOW){
+                  OPTO_STATE = HIGH;
+                } else {
+                  OPTO_STATE = LOW;
+                }
+
+                digitalWrite(opto_LED, OPTO_STATE);
+              }
+              if (OPTO_START_TIMESTAMP == 0){
+                Serial.println("OPTO > ON");
+                OPTO_START_TIMESTAMP += 1;
+              }
+            }else{
+              digitalWrite(opto_LED, LOW);
+              if (OPTO_END_TIMESTAMP == 0){
+                Serial.println("OPTO > OFF");
+                OPTO_END_TIMESTAMP += 1;
+              }
+            }
 
             // CHECK IF LEFT IS ACTIVE
             if (IR_SENSOR_L1.distance() < IF_THRESHOLD
@@ -589,6 +627,13 @@ void loop() {
               SPEAKER_RIGHT.stop();
               SPEAKER_LEFT.stop();
               Serial.println("CS > OFF");
+
+              // IF LEFT IS HIGH THEN TERMINATE OPTOGENETICS LED
+              digitalWrite(opto_LED, LOW);
+              if (OPTO_END_TIMESTAMP == 0){
+                Serial.println("OPTO > OFF");
+                OPTO_END_TIMESTAMP += 1;
+              }
 
               // RECORD LATENCY_END WHEN SHUTTLING
               ESCAPE_LATENCY_END = millis();
@@ -650,15 +695,26 @@ void loop() {
           Serial.println("LEFT COMPARTMENT > ACTIVE");
           SPEAKER_RIGHT.play(CS_FREQUENCY);
           SPEAKER_LEFT.play(CS_FREQUENCY);
-          START_TONE = millis();
-          CURRENT_TONE_DELAY = millis();
           Serial.println("CS > ON");
 
           // RECORD LATENCY_START
           ESCAPE_LATENCY_START = millis();
 
           // TURN LED ON IN BOTH SIDES
-          digitalWrite(speaker_led_r, HIGH); digitalWrite(speaker_led_l, HIGH);
+          digitalWrite(speaker_led_r, HIGH);
+          digitalWrite(speaker_led_l, HIGH);
+
+          // BEGIN TIMER FOR TONE DURATION (14 sec, 1 sec shock)
+          START_TONE = millis();
+          CURRENT_TONE_DELAY = millis();
+
+          // BEGIN TIMER FOR OPTOGENETICS LED
+          OPTO_START = millis();
+          OPTO_CURRENT = millis();
+
+          // RESETTING OPTOGENETICS TIMESTAMP VARIABLES
+          OPTO_START_TIMESTAMP = 0;
+          OPTO_END_TIMESTAMP = 0;
 
           // ADD 0.5 SEC DELAY TO AVOID SENSOR DETECTION ARTIFACTS
           unsigned long S_DELAY_START = millis();
@@ -669,6 +725,34 @@ void loop() {
 
           // WHILE THE OPPOSITE COMPARTMENT IS NOT ACTIVE, CONTINUE FOR TONE_DURATION
           while (true) {
+
+            // OPTOGENETICS PROTOCOL
+            OPTO_CURRENT = millis();
+            OPTO_FLICKER_START = millis();
+            // TURN ON LED OPTOGENETICS FOR OPTO_FULL_DURATION
+            if ((OPTO_CURRENT - OPTO_START) < (OPTO_FULL_DURATION * 1000)){
+              if (OPTO_FLICKER_START - OPTO_FLICKER_PREVIOUS >= OPTO_FLICKER_DURATION){
+                OPTO_FLICKER_PREVIOUS = OPTO_FLICKER_START;
+
+                if (OPTO_STATE == LOW){
+                  OPTO_STATE = HIGH;
+                } else {
+                  OPTO_STATE = LOW;
+                }
+
+                digitalWrite(opto_LED, OPTO_STATE);
+              }
+              if (OPTO_START_TIMESTAMP == 0){
+                Serial.println("OPTO > ON");
+                OPTO_START_TIMESTAMP += 1;
+              }
+            }else{
+              digitalWrite(opto_LED, LOW);
+              if (OPTO_END_TIMESTAMP == 0){
+                Serial.println("OPTO > OFF");
+                OPTO_END_TIMESTAMP += 1;
+              }
+            }
 
             // CHECK IF RIGHT IS ACTIVE
             if (IR_SENSOR_R1.distance() < IF_THRESHOLD
@@ -687,6 +771,13 @@ void loop() {
               SPEAKER_RIGHT.stop();
               SPEAKER_LEFT.stop();
               Serial.println("CS > OFF");
+
+              // IF RIGHT IS HIGH THEN TERMINATE OPTOGENETICS LED
+              digitalWrite(opto_LED, LOW);
+              if (OPTO_END_TIMESTAMP == 0){
+                Serial.println("OPTO > OFF");
+                OPTO_END_TIMESTAMP += 1;
+              } 
 
               // RECORD LATENCY_END WHEN SHUTTLING
               ESCAPE_LATENCY_END = millis();
