@@ -371,6 +371,20 @@ void loop() {
     Serial.println("TEST SHOCKER > COMPLETE");
     delay(500);
 
+    // TEST DORICS DIGITAL INPUTS
+    Serial.println("TEST DORICS"); 
+    Serial.println("CHANNEL 2"); 
+    delay(500); 
+    digitalWrite(fiber_clock, HIGH); 
+    delay(5000); 
+    digitalWrite(fiber_clock, LOW); 
+    Serial.println("CHANNEL 3"); 
+    digitalWrite(fiber_trial, HIGH); 
+    delay(5000); 
+    digitalWrite(fiber_trial, LOW); 
+    Serial.println("TEST DORICS > COMPLETE"); 
+    delay(500); 
+
   }
 
   // RESET CUMMULATIVE VARIABLE VALUES
