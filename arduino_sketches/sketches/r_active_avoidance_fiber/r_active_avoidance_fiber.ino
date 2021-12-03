@@ -86,8 +86,8 @@ const int check_yellow_LED = 25;
 const int check_green_LED = 27;
 
 // fiber photometry pins
-const int fiber_clock = 45;
-const int fiber_trial = 46;
+const int fiber_clock = 43;
+const int fiber_trial = 45;
 //##################################################################################################################
 // ANALOG PINS
 // Right Sensors
