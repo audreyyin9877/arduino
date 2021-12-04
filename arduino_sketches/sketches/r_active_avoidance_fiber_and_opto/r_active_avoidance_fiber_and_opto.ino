@@ -101,6 +101,10 @@ const int check_green_LED = 27;
 
 // Optogenetics
 const int opto_LED = 12;
+
+//fiber photometry pins
+const int fiber_clock = 43;
+const int fiber_trial = 45;
 //##################################################################################################################
 // ANALOG PINS
 // Right Sensors
@@ -158,6 +162,9 @@ void setup() {
   pinMode(check_green_LED, OUTPUT);
 
   pinMode(opto_LED, OUTPUT);
+
+  pinMode(fiber_clock, OUTPUT);
+  pinMode(fiber_trial, OUTPUT);
 
   /*
   // UNCOMMENT TO TEST SENSORS
@@ -390,6 +397,21 @@ void loop() {
     digitalWrite(opto_LED, LOW);
     Serial.println("TEST OPTOGENETICS > COMPLETE");
 
+    // TEST DORICS DIGITAL INPUTS
+    Serial.println("TEST DORICS");
+    delay(500);
+    Serial.println("CHANNEL 2");
+    digitalWrite(fiber_clock, HIGH);
+    delay(5000);
+    digitalWrite(fiber_clock, LOW);
+    Serial.println("CHANNEL 3");
+    digitalWrite(fiber_trial, HIGH);
+    delay(5000);
+    digitalWrite(fiber_trial, LOW);
+    Serial.println("TEST DORICS > COMPLETE");
+    delay(500);
+
+
   }
 
   // RESET CUMMULATIVE VARIABLE VALUES
@@ -412,6 +434,10 @@ void loop() {
     Serial.print("TONE DURATION (SEC): "); Serial.println(TONE_DURATION);
     Serial.print("SHOCK DURATION (SEC): "); Serial.println(SHOCK_DURATION);
     Serial.print("TONE PAIRED WITH SHOCK AT (SEC): "); Serial.println(TONE_DURATION - SHOCK_DURATION);
+
+    // INITIATE FIBER PHOTOMETRY CLOCK (DATA COLLECTION START)
+    Serial.println("FIBER CLOCK > START");
+    digitalWrite(fiber_clock, HIGH);
 
     // SIGNAL START OF THE SESSION
     for (int x = 0; x < 5; x ++) {
@@ -436,7 +462,8 @@ void loop() {
 
       // PRINT INFORMATION ABOUT TRIAL
       Serial.print("TRIAL NUMBER "); Serial.print(x+1); Serial.println(" > START");
-
+      // Trial number marks the beginning of fiber trial timekeeping
+      digitalWrite(fiber_trial, HIGH);
 
       // TRIAL ONE UNAVOID
       if (x == 0) {
@@ -500,6 +527,8 @@ void loop() {
 
         // INITIATE INTER-TRIAL-INTERVAL
         delay(ITI_DURATION*1000);
+        // Trial number marks end of fiber trial timekeeping
+        digitalWrite(fiber_trial, LOW);
 
         // PRINT EXIT INFORMATION ABOUT TRIAL
         // ###########################################################################
@@ -777,7 +806,7 @@ void loop() {
               if (OPTO_END_TIMESTAMP == 0){
                 Serial.println("OPTO > OFF");
                 OPTO_END_TIMESTAMP += 1;
-              } 
+              }
 
               // RECORD LATENCY_END WHEN SHUTTLING
               ESCAPE_LATENCY_END = millis();
@@ -876,6 +905,9 @@ void loop() {
       // INITIATE INTER-TRIAL-INTERVAL
       delay(ITI_DURATION*1000);
 
+      // Trial number marks end of fiber trial timekeeping
+      digitalWrite(fiber_trial, LOW);
+
 
       // PRINT EXIT INFORMATION ABOUT TRIAL
       // ###########################################################################
@@ -885,6 +917,10 @@ void loop() {
       Serial.print("CUMULATIVE TOTAL FAILURES: "); Serial.println(TOTAL_AVOIDANCE_FAILURE);
 
     }
+
+    // TERMINATE FIBER PHOTOMETRY CLOCK (DATA COLLECTION END)
+    Serial.println("FIBER CLOCK > END");
+    digitalWrite(fiber_clock, LOW);
 
     // SESSION FINAL INFO AND STATISTICS
     // ###########################################################################
