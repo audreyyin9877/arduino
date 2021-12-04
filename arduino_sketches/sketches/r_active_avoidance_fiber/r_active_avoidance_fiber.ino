@@ -372,18 +372,18 @@ void loop() {
     delay(500);
 
     // TEST DORICS DIGITAL INPUTS
-    Serial.println("TEST DORICS"); 
-    Serial.println("CHANNEL 2"); 
+    Serial.println("TEST DORICS");
     delay(500); 
-    digitalWrite(fiber_clock, HIGH); 
-    delay(5000); 
-    digitalWrite(fiber_clock, LOW); 
-    Serial.println("CHANNEL 3"); 
-    digitalWrite(fiber_trial, HIGH); 
-    delay(5000); 
-    digitalWrite(fiber_trial, LOW); 
-    Serial.println("TEST DORICS > COMPLETE"); 
-    delay(500); 
+    Serial.println("CHANNEL 2");
+    digitalWrite(fiber_clock, HIGH);
+    delay(5000);
+    digitalWrite(fiber_clock, LOW);
+    Serial.println("CHANNEL 3");
+    digitalWrite(fiber_trial, HIGH);
+    delay(5000);
+    digitalWrite(fiber_trial, LOW);
+    Serial.println("TEST DORICS > COMPLETE");
+    delay(500);
 
   }
 
