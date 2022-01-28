@@ -333,11 +333,15 @@ void setup() {
         Serial.println();
 
         Serial.println("Current sensor values: ");
-        Serial.println("L1 L2 R1 R2");
+        Serial.println("L1 L2 L3 L4 R1 R2 R3 R4");
         Serial.print(IR_SENSOR_L1.distance()); Serial.print(" ");
         Serial.print(IR_SENSOR_L2.distance()); Serial.print(" ");
+        Serial.print(IR_SENSOR_L3.distance()); Serial.print(" ");
+        Serial.print(IR_SENSOR_L4.distance()); Serial.print(" ");
         Serial.print(IR_SENSOR_R1.distance()); Serial.print(" ");
-        Serial.print(IR_SENSOR_R2.distance());
+        Serial.print(IR_SENSOR_R2.distance()); Serial.print(" ");
+        Serial.print(IR_SENSOR_R3.distance()); Serial.print(" ");
+        Serial.print(IR_SENSOR_R4.distance()); Serial.print(" ");
         Serial.println();
 
         Serial.println("Sensor thresholds: ");
