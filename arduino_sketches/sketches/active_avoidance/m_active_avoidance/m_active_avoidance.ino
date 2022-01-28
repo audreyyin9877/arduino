@@ -164,6 +164,32 @@ void setup() {
   pinMode(check_yellow_LED, OUTPUT);
   pinMode(check_green_LED, OUTPUT);
 
+  /*
+  // TEST SENSORS
+  // uncomment when you want to test
+  while (true){
+    Serial.print("Left 1: ");
+    Serial.println(IR_SENSOR_L1.distance());
+    Serial.print("Left 2: ");
+    Serial.println(IR_SENSOR_L2.distance());
+    Serial.print("Left 3: ");
+    Serial.println(IR_SENSOR_L3.distance());
+    Serial.print("Left 4: ");
+    Serial.println(IR_SENSOR_L4.distance());
+
+    Serial.print("Right 1: ");
+    Serial.println(IR_SENSOR_R1.distance());
+    Serial.print("Right 2: ");
+    Serial.println(IR_SENSOR_R2.distance());
+    Serial.print("Right 3: ");
+    Serial.println(IR_SENSOR_R3.distance());
+    Serial.print("Right 4: ");
+    Serial.println(IR_SENSOR_R4.distance());
+
+    delay(2000);
+  }
+    /**/
+
   // PRINT ENTRY MESSAGE
   delay(5000);
   Serial.println("***CHECK SENSOR READINGS***");
@@ -326,32 +352,6 @@ void setup() {
   } else {
     digitalWrite(check_yellow_LED, HIGH);
   }
-
-  /*
-  // TEST SENSORS
-  // uncomment when you want to test
-  while (true){
-    Serial.print("Left 1: ");
-    Serial.println(IR_SENSOR_L1.distance());
-    Serial.print("Left 2: ");
-    Serial.println(IR_SENSOR_L2.distance());
-    Serial.print("Left 3: ");
-    Serial.println(IR_SENSOR_L3.distance());
-    Serial.print("Left 4: ");
-    Serial.println(IR_SENSOR_L4.distance());
-
-    Serial.print("Right 1: ");
-    Serial.println(IR_SENSOR_R1.distance());
-    Serial.print("Right 2: ");
-    Serial.println(IR_SENSOR_R2.distance());
-    Serial.print("Right 3: ");
-    Serial.println(IR_SENSOR_R3.distance());
-    Serial.print("Right 4: ");
-    Serial.println(IR_SENSOR_R4.distance());
-
-    delay(2000);
-    }
-    /**/
 
 
 }
