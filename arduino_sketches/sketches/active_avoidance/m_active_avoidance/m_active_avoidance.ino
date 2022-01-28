@@ -94,15 +94,15 @@ const int check_green_LED = 51;
 // ANALOG PINS
 // Right Sensors
 #define ir_right A0
-#define ir_right2 A2
-#define ir_right3 A4
-#define ir_right4 A6
+#define ir_right2 A4
+#define ir_right3 A8
+#define ir_right4 A12
 
 // Left Sensors
 #define ir_left A1
-#define ir_left2 A3
-#define ir_left3 A5
-#define ir_left4 A7
+#define ir_left2 A5
+#define ir_left3 A9
+#define ir_left4 A13
 //##################################################################################################################
 
 
