@@ -143,8 +143,29 @@ const int IR_THRESHOLD_R4 = 19;
 unsigned int IR_THRESHOLDS[] = {IR_THRESHOLD_L1, IR_THRESHOLD_L2, IR_THRESHOLD_L3, IR_THRESHOLD_L4,
                                 IR_THRESHOLD_R1, IR_THRESHOLD_R2, IR_THRESHOLD_R3, IR_THRESHOLD_R4};
 //##################################################################################################################
+class Timer {
+  // Class Member Variables
+  long onTime;                        // milliseconds of delay being on 
+  unsigned long sensor_cal_start;     // will store the last time LED was updated
 
+  public: 
+  Timer(long on){
+    onTime = on; 
+    sensor_cal_start = 0; 
+  }
 
+  void CheckDelay() {
+    // check to see if it's time to stop the delay 
+    unsigned long sensor_cal_current = millis(); 
+
+    while (sensor_cal_start - sensor_cal_current < onTime) {
+            sensor_cal_start = millis();
+    }
+  }
+};
+
+Timer sensor_cal(10); 
+//##################################################################################################################
 
 void setup() {
 
