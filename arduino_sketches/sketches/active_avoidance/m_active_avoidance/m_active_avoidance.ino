@@ -179,7 +179,7 @@ void setup() {
   pinMode(check_green_LED, OUTPUT);
 
   /*
-  // TEST SENSORS
+  // TEST SENSORS PROTOCOL
   // uncomment when you want to test
   while (true){
     L1_READING = IR_SENSOR_L1.distance(); delay(10); L1_READING = IR_SENSOR_L1.distance();
@@ -207,7 +207,8 @@ void setup() {
   }
     /**/
 
-  // PRINT ENTRY MESSAGE
+  // CHCECK SENSORS PROTOCOL
+  // Print entry message
   delay(5000);
   Serial.println("***CHECK SENSOR READINGS***");
   Serial.println("IF THE LIGHT IS: ");
@@ -216,13 +217,12 @@ void setup() {
   Serial.print("\t"); Serial.println("BLINKING RED >>> SENSOR CHECK HAS FAILED :(");
   Serial.print("\t"); Serial.println("GREEN >>> CONTINUE WITH THE EXPERIMENT :)");
 
-  // CHECK Sensors
   // Turn off LED lights except for reed
   digitalWrite(check_red_LED, HIGH);
   digitalWrite(check_yellow_LED, LOW);
   digitalWrite(check_green_LED, LOW);
 
-  // PRINT MESSAGE TO USER
+  // Print message to user. Lets them know the computer is doing something 
   Serial.println();
   Serial.println("COLLECTING AND EVALUATING SENSOR READINGS...");
   Serial.println();
@@ -303,6 +303,7 @@ void setup() {
   }
 
   // TURN ON LED LIGHT BASED ON CHECK SENSOR OUTCOME
+  // If check sensor protocol passed
   if (TEST_PASS){
     // Message to user
     Serial.println("Sensor check complete! Continue with the experiment.");
@@ -312,6 +313,7 @@ void setup() {
     digitalWrite(check_yellow_LED, LOW);
     digitalWrite(check_red_LED, LOW);
 
+  // if check sensor protcol failed. while(true) forces user to call for help
   } else if (!TEST_PASS){
     bool TEST_START = false;
 
@@ -331,7 +333,7 @@ void setup() {
       digitalWrite(check_red_LED, RED_STATE);
       delay(300);
 
-      // Recover minimum values from readings
+      // Recover minimum values from readings. Can input 2 on serial monitor, or Alt-T on Bonsai-Rx to see values
       int x = Serial.parseInt();
       if (x==2){
         TEST_START = true;
@@ -372,8 +374,15 @@ void setup() {
       }
     }
 
+  // if something goes completely wrong, yellow light turns on, and user is forced to call for help 
   } else {
     digitalWrite(check_yellow_LED, HIGH);
+    
+    // Message to user
+    Serial.println("Sensor check has failed. Please contact either Rodrigo or Audrey.");
+    while(true) {
+      
+    }
   }
 
 
