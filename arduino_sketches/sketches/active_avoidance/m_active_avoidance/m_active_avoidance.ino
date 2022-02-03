@@ -130,18 +130,7 @@ SharpIR IR_SENSOR_L3 = SharpIR(ir_left3, model);
 SharpIR IR_SENSOR_L4 = SharpIR(ir_left4, model);
 
 // SENSOR THRESHOLDS
-const int IR_THRESHOLD_L1 = 19;
-const int IR_THRESHOLD_L2 = 18;
-const int IR_THRESHOLD_L3 = 18;
-const int IR_THRESHOLD_L4 = 20;
-
-const int IR_THRESHOLD_R1 = 22;
-const int IR_THRESHOLD_R2 = 21;
-const int IR_THRESHOLD_R3 = 22;
-const int IR_THRESHOLD_R4 = 19;
-
-unsigned int IR_THRESHOLDS[] = {IR_THRESHOLD_L1, IR_THRESHOLD_L2, IR_THRESHOLD_L3, IR_THRESHOLD_L4,
-                                IR_THRESHOLD_R1, IR_THRESHOLD_R2, IR_THRESHOLD_R3, IR_THRESHOLD_R4};
+const int IR_THRESHOLD = 20; 
 
 // SENSOR READINGS
 int L1_READING; int L2_READING; int L3_READING; int L4_READING; 
@@ -305,7 +294,7 @@ void setup() {
     // The minimum found using 400 values is always greater than the true minimum.
     // We subtract 2 from the minimum found using 400 values to approximate the true minimum.
     MIN_ARRAY[i] -= 2;
-    if (MIN_ARRAY[i] < IR_THRESHOLDS[i]){
+    if (MIN_ARRAY[i] < IR_THRESHOLD){
       TEST_PASS = false;
     }
   }
@@ -367,13 +356,6 @@ void setup() {
         Serial.print(IR_SENSOR_R2.distance()); Serial.print(" ");
         Serial.print(IR_SENSOR_R3.distance()); Serial.print(" ");
         Serial.print(IR_SENSOR_R4.distance()); Serial.print(" ");
-        Serial.println();
-
-        Serial.println("Sensor thresholds: ");
-        Serial.println("L1 L2 L3 L4 R1 R2 R3 R4");
-        for (int i = 0; i < (sizeof(IR_THRESHOLDS) / sizeof(IR_THRESHOLDS[0])); i++){
-          Serial.print(IR_THRESHOLDS[i]); Serial.print(" ");
-        }
         Serial.println();
       }
     }
@@ -588,16 +570,16 @@ void loop() {
         R3_READING = IR_SENSOR_R3.distance(); sensor_cal.CheckDelay(); R3_READING = IR_SENSOR_R3.distance();
         R4_READING = IR_SENSOR_R4.distance(); sensor_cal.CheckDelay(); R4_READING = IR_SENSOR_R4.distance();
         
-        if (IR_SENSOR_R1.distance() < IR_THRESHOLD_R1 ||
-        IR_SENSOR_R2.distance() < IR_THRESHOLD_R2 ||
-        IR_SENSOR_R3.distance() < IR_THRESHOLD_R3 ||
-        IR_SENSOR_R4.distance() < IR_THRESHOLD_R4) {
+        if (IR_SENSOR_R1.distance() < IR_THRESHOLD ||
+        IR_SENSOR_R2.distance() < IR_THRESHOLD ||
+        IR_SENSOR_R3.distance() < IR_THRESHOLD ||
+        IR_SENSOR_R4.distance() < IR_THRESHOLD) {
           RIGHT_ACTIVE = HIGH;
           LEFT_ACTIVE = LOW;
-        } else if (IR_SENSOR_L1.distance() < IR_THRESHOLD_L1 ||
-        IR_SENSOR_L2.distance() < IR_THRESHOLD_L2 ||
-        IR_SENSOR_L3.distance() < IR_THRESHOLD_L3 ||
-        IR_SENSOR_L4.distance() < IR_THRESHOLD_L4) {
+        } else if (IR_SENSOR_L1.distance() < IR_THRESHOLD ||
+        IR_SENSOR_L2.distance() < IR_THRESHOLD ||
+        IR_SENSOR_L3.distance() < IR_THRESHOLD ||
+        IR_SENSOR_L4.distance() < IR_THRESHOLD) {
           LEFT_ACTIVE = HIGH;
           RIGHT_ACTIVE = LOW;
         } else {
@@ -642,9 +624,9 @@ void loop() {
             L3_READING = IR_SENSOR_L3.distance(); sensor_cal.CheckDelay(); L3_READING = IR_SENSOR_L3.distance();
 
             // CHECK IF LEFT IS ACTIVE
-            if (IR_SENSOR_L1.distance() < IR_THRESHOLD_L1 ||
-            IR_SENSOR_L2.distance() < IR_THRESHOLD_L2 ||
-            IR_SENSOR_L3.distance() < IR_THRESHOLD_L3) {
+            if (IR_SENSOR_L1.distance() < IR_THRESHOLD ||
+            IR_SENSOR_L2.distance() < IR_THRESHOLD ||
+            IR_SENSOR_L3.distance() < IR_THRESHOLD) {
               LEFT_ACTIVE = HIGH;
               RIGHT_ACTIVE = LOW;
             } else {
@@ -746,9 +728,9 @@ void loop() {
             R4_READING = IR_SENSOR_R4.distance(); sensor_cal.CheckDelay(); R4_READING = IR_SENSOR_R4.distance();
 
             // CHECK IF RIGHT IS ACTIVE
-            if (IR_SENSOR_R2.distance() < IR_THRESHOLD_R2 ||
-            IR_SENSOR_R3.distance() < IR_THRESHOLD_R3 ||
-            IR_SENSOR_R4.distance() < IR_THRESHOLD_R4) {
+            if (IR_SENSOR_R2.distance() < IR_THRESHOLD ||
+            IR_SENSOR_R3.distance() < IR_THRESHOLD ||
+            IR_SENSOR_R4.distance() < IR_THRESHOLD) {
               RIGHT_ACTIVE = HIGH;
               LEFT_ACTIVE = LOW;
             } else {
