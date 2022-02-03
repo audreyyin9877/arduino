@@ -178,19 +178,29 @@ void setup() {
   pinMode(check_yellow_LED, OUTPUT);
   pinMode(check_green_LED, OUTPUT);
 
-  /*
+  
   // TEST SENSORS
   // uncomment when you want to test
   while (true){
+    L1_READING = IR_SENSOR_L1.distance(); delay(10); L1_READING = IR_SENSOR_L1.distance();
+    L2_READING = IR_SENSOR_L2.distance(); delay(10); L2_READING = IR_SENSOR_L2.distance();
+    L3_READING = IR_SENSOR_L3.distance(); delay(10); L3_READING = IR_SENSOR_L3.distance();
+    L4_READING = IR_SENSOR_L4.distance(); delay(10); L4_READING = IR_SENSOR_L4.distance();
+
+    R1_READING = IR_SENSOR_R1.distance(); delay(10); R1_READING = IR_SENSOR_R1.distance();
+    R2_READING = IR_SENSOR_R2.distance(); delay(10); R2_READING = IR_SENSOR_R2.distance();
+    R3_READING = IR_SENSOR_R3.distance(); delay(10); R3_READING = IR_SENSOR_R3.distance();
+    R4_READING = IR_SENSOR_R4.distance(); delay(10); R4_READING = IR_SENSOR_R4.distance();
+    
     Serial.println("L1 L2 L3 L4 R1 R2 R3 R4");
-    Serial.print(IR_SENSOR_L1.distance()); Serial.print(" ");
-    Serial.print(IR_SENSOR_L2.distance()); Serial.print(" ");
-    Serial.print(IR_SENSOR_L3.distance()); Serial.print(" ");
-    Serial.print(IR_SENSOR_L4.distance()); Serial.print(" ");
-    Serial.print(IR_SENSOR_R1.distance()); Serial.print(" ");
-    Serial.print(IR_SENSOR_R2.distance()); Serial.print(" ");
-    Serial.print(IR_SENSOR_R3.distance()); Serial.print(" ");
-    Serial.print(IR_SENSOR_R4.distance()); Serial.print(" ");
+    Serial.print(L1_READING); Serial.print(" ");
+    Serial.print(L2_READING); Serial.print(" ");
+    Serial.print(L3_READING); Serial.print(" ");
+    Serial.print(L4_READING); Serial.print(" ");
+    Serial.print(R1_READING); Serial.print(" ");
+    Serial.print(R2_READING); Serial.print(" ");
+    Serial.print(R3_READING); Serial.print(" ");
+    Serial.print(R4_READING); Serial.print(" ");
     Serial.println();
 
     delay(2000);
