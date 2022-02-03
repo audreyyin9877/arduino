@@ -23,7 +23,7 @@ unsigned long ACCLIMATION_DURATION = 20;                       // SECONDS
 unsigned long TONE_DURATION = 15;                              // SECONDS
 unsigned long SHOCK_DURATION = 1;                              // SECONDS
 int CS_FREQUENCY = 5000;                                       // IN HERTZ
-int ITI_INTERVALS[] = {40, 60, 80, 100, 120};                  // list of the inter-trial-intervals: ITI
+int ITI_INTERVALS[] = {40, 60, 80, 100, 120};                  // list of the inter-trial-intervals: ITI SECONDS
 unsigned long MOTION_DETECTION_DURATION = 30;                  // SECONDS
 //##################################################################################################################
 //##################################################################################################################
@@ -136,6 +136,11 @@ const int IR_THRESHOLD = 20;
 int L1_READING; int L2_READING; int L3_READING; int L4_READING; 
 int R1_READING; int R2_READING; int R3_READING; int R4_READING;
 //##################################################################################################################
+// Analog readings from multiple pinds are very inaccurate. The trick is to read them twice, with a small dealy after each read
+// (10ms tends is good), then discard the first reading. This is because the ADC multiplexier needs switching time and the voltage 
+// needs time to stabalize after switching. To see more, check: https://forum.arduino.cc/t/reading-multiple-analog-inputs/55019 
+
+// This class calls for a delay in ms without using a delay. 
 class Timer {
   // Class Member Variables
   long onTime;                        // milliseconds of delay being on 
@@ -157,6 +162,7 @@ class Timer {
   }
 };
 
+// Create a Timer object. 
 Timer sensor_cal(10); 
 //##################################################################################################################
 
@@ -207,7 +213,7 @@ void setup() {
   }
     /**/
 
-  // CHCECK SENSORS PROTOCOL
+  // CHECK SENSORS PROTOCOL
   // Print entry message
   delay(5000);
   Serial.println("***CHECK SENSOR READINGS***");
@@ -404,7 +410,7 @@ void loop() {
   }
 
 
-  // TEST CHAMBER
+  // TEST CHAMBER COMPONENTS
   if (TEST_START) {
 
     // RESET SERIAL INPUT FROM BONSAI-RX
@@ -456,7 +462,8 @@ void loop() {
   TOTAL_AVOIDANCE_SUCCESS = 0;
   ESCAPE_LATENCY_CUMULATIVE = 0;
 
-  // START SESSION
+
+  // START EXPERIMENT SESSION
   if (SESSION_START) {
 
     // RESET SERIAL INPUT FROM BONSAI-RX
