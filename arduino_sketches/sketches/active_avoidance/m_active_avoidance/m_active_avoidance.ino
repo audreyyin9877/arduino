@@ -142,6 +142,10 @@ const int IR_THRESHOLD_R4 = 19;
 
 unsigned int IR_THRESHOLDS[] = {IR_THRESHOLD_L1, IR_THRESHOLD_L2, IR_THRESHOLD_L3, IR_THRESHOLD_L4,
                                 IR_THRESHOLD_R1, IR_THRESHOLD_R2, IR_THRESHOLD_R3, IR_THRESHOLD_R4};
+
+// SENSOR READINGS
+int L1_READING; int L2_READING; int L3_READING; int L4_READING; 
+int R1_READING; int R2_READING; int R3_READING; int R4_READING;
 //##################################################################################################################
 class Timer {
   // Class Member Variables
@@ -574,7 +578,16 @@ void loop() {
 
       // DETECT POSITION, DELIVER CS AND US
       while (true) {
-
+        L1_READING = IR_SENSOR_L1.distance(); sensor_cal.CheckDelay(); L1_READING = IR_SENSOR_L1.distance();
+        L2_READING = IR_SENSOR_L2.distance(); sensor_cal.CheckDelay(); L2_READING = IR_SENSOR_L2.distance();
+        L3_READING = IR_SENSOR_L3.distance(); sensor_cal.CheckDelay(); L3_READING = IR_SENSOR_L3.distance();
+        L4_READING = IR_SENSOR_L4.distance(); sensor_cal.CheckDelay(); L4_READING = IR_SENSOR_L4.distance();
+    
+        R1_READING = IR_SENSOR_R1.distance(); sensor_cal.CheckDelay(); R1_READING = IR_SENSOR_R1.distance();
+        R2_READING = IR_SENSOR_R2.distance(); sensor_cal.CheckDelay(); R2_READING = IR_SENSOR_R2.distance();
+        R3_READING = IR_SENSOR_R3.distance(); sensor_cal.CheckDelay(); R3_READING = IR_SENSOR_R3.distance();
+        R4_READING = IR_SENSOR_R4.distance(); sensor_cal.CheckDelay(); R4_READING = IR_SENSOR_R4.distance();
+        
         if (IR_SENSOR_R1.distance() < IR_THRESHOLD_R1 ||
         IR_SENSOR_R2.distance() < IR_THRESHOLD_R2 ||
         IR_SENSOR_R3.distance() < IR_THRESHOLD_R3 ||
@@ -624,6 +637,9 @@ void loop() {
 
           // WHILE THE OPPOSITE COMPARTMENT IS NOT ACTIVE, CONTINUE FOR TONE_DURATION
           while (true) {
+            L1_READING = IR_SENSOR_L1.distance(); sensor_cal.CheckDelay(); L1_READING = IR_SENSOR_L1.distance();
+            L2_READING = IR_SENSOR_L2.distance(); sensor_cal.CheckDelay(); L2_READING = IR_SENSOR_L2.distance();
+            L3_READING = IR_SENSOR_L3.distance(); sensor_cal.CheckDelay(); L3_READING = IR_SENSOR_L3.distance();
 
             // CHECK IF LEFT IS ACTIVE
             if (IR_SENSOR_L1.distance() < IR_THRESHOLD_L1 ||
@@ -725,6 +741,9 @@ void loop() {
 
           // WHILE THE OPPOSITE COMPARTMENT IS NOT ACTIVE, CONTINUE FOR TONE_DURATION
           while (true) {
+            R2_READING = IR_SENSOR_R2.distance(); sensor_cal.CheckDelay(); R2_READING = IR_SENSOR_R2.distance();
+            R3_READING = IR_SENSOR_R3.distance(); sensor_cal.CheckDelay(); R3_READING = IR_SENSOR_R3.distance();
+            R4_READING = IR_SENSOR_R4.distance(); sensor_cal.CheckDelay(); R4_READING = IR_SENSOR_R4.distance();
 
             // CHECK IF RIGHT IS ACTIVE
             if (IR_SENSOR_R2.distance() < IR_THRESHOLD_R2 ||
