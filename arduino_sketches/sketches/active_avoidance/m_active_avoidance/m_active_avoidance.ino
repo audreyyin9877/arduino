@@ -23,7 +23,7 @@ unsigned long ACCLIMATION_DURATION = 20;                       // SECONDS
 unsigned long TONE_DURATION = 15;                              // SECONDS
 unsigned long SHOCK_DURATION = 1;                              // SECONDS
 int CS_FREQUENCY = 5000;                                       // IN HERTZ
-int ITI_INTERVALS[] = {40, 60, 80, 100, 120};                  // list of the inter-trial-intervals: ITI
+int ITI_INTERVALS[] = {40, 60, 80, 100, 120};                  // list of the inter-trial-intervals: ITI SECONDS
 unsigned long MOTION_DETECTION_DURATION = 30;                  // SECONDS
 //##################################################################################################################
 //##################################################################################################################
@@ -94,15 +94,15 @@ const int check_green_LED = 51;
 // ANALOG PINS
 // Right Sensors
 #define ir_right A0
-#define ir_right2 A2
-#define ir_right3 A4
-#define ir_right4 A6
+#define ir_right2 A4
+#define ir_right3 A8
+#define ir_right4 A12
 
 // Left Sensors
 #define ir_left A1
-#define ir_left2 A3
-#define ir_left3 A5
-#define ir_left4 A7
+#define ir_left2 A5
+#define ir_left3 A9
+#define ir_left4 A13
 //##################################################################################################################
 
 
@@ -130,21 +130,41 @@ SharpIR IR_SENSOR_L3 = SharpIR(ir_left3, model);
 SharpIR IR_SENSOR_L4 = SharpIR(ir_left4, model);
 
 // SENSOR THRESHOLDS
-const int IR_THRESHOLD_L1 = 19;
-const int IR_THRESHOLD_L2 = 18;
-const int IR_THRESHOLD_L3 = 18;
-const int IR_THRESHOLD_L4 = 20;
+const int IR_THRESHOLD = 20; 
 
-const int IR_THRESHOLD_R1 = 22;
-const int IR_THRESHOLD_R2 = 21;
-const int IR_THRESHOLD_R3 = 22;
-const int IR_THRESHOLD_R4 = 19;
-
-unsigned int IR_THRESHOLDS[] = {IR_THRESHOLD_L1, IR_THRESHOLD_L2, IR_THRESHOLD_L3, IR_THRESHOLD_L4,
-                                IR_THRESHOLD_R1, IR_THRESHOLD_R2, IR_THRESHOLD_R3, IR_THRESHOLD_R4};
+// SENSOR READINGS
+int L1_READING; int L2_READING; int L3_READING; int L4_READING; 
+int R1_READING; int R2_READING; int R3_READING; int R4_READING;
 //##################################################################################################################
+// Analog readings from multiple pinds are very inaccurate. The trick is to read them twice, with a small dealy after each read
+// (10ms tends is good), then discard the first reading. This is because the ADC multiplexier needs switching time and the voltage 
+// needs time to stabalize after switching. To see more, check: https://forum.arduino.cc/t/reading-multiple-analog-inputs/55019 
 
+// This class calls for a delay in ms without using a delay. 
+class Timer {
+  // Class Member Variables
+  long onTime;                        // milliseconds of delay being on 
+  unsigned long sensor_cal_start;     // will store the last time LED was updated
 
+  public: 
+  Timer(long on){
+    onTime = on; 
+    sensor_cal_start = 0; 
+  }
+
+  void CheckDelay() {
+    // check to see if it's time to stop the delay 
+    unsigned long sensor_cal_current = millis(); 
+
+    while (sensor_cal_start - sensor_cal_current < onTime) {
+            sensor_cal_start = millis();
+    }
+  }
+};
+
+// Create a Timer object. 
+Timer sensor_cal(10); 
+//##################################################################################################################
 
 void setup() {
 
@@ -164,7 +184,37 @@ void setup() {
   pinMode(check_yellow_LED, OUTPUT);
   pinMode(check_green_LED, OUTPUT);
 
-  // PRINT ENTRY MESSAGE
+  /*
+  // TEST SENSORS PROTOCOL
+  // uncomment when you want to test
+  while (true){
+    L1_READING = IR_SENSOR_L1.distance(); delay(10); L1_READING = IR_SENSOR_L1.distance();
+    L2_READING = IR_SENSOR_L2.distance(); delay(10); L2_READING = IR_SENSOR_L2.distance();
+    L3_READING = IR_SENSOR_L3.distance(); delay(10); L3_READING = IR_SENSOR_L3.distance();
+    L4_READING = IR_SENSOR_L4.distance(); delay(10); L4_READING = IR_SENSOR_L4.distance();
+
+    R1_READING = IR_SENSOR_R1.distance(); delay(10); R1_READING = IR_SENSOR_R1.distance();
+    R2_READING = IR_SENSOR_R2.distance(); delay(10); R2_READING = IR_SENSOR_R2.distance();
+    R3_READING = IR_SENSOR_R3.distance(); delay(10); R3_READING = IR_SENSOR_R3.distance();
+    R4_READING = IR_SENSOR_R4.distance(); delay(10); R4_READING = IR_SENSOR_R4.distance();
+    
+    Serial.println("L1 L2 L3 L4 R1 R2 R3 R4");
+    Serial.print(L1_READING); Serial.print(" ");
+    Serial.print(L2_READING); Serial.print(" ");
+    Serial.print(L3_READING); Serial.print(" ");
+    Serial.print(L4_READING); Serial.print(" ");
+    Serial.print(R1_READING); Serial.print(" ");
+    Serial.print(R2_READING); Serial.print(" ");
+    Serial.print(R3_READING); Serial.print(" ");
+    Serial.print(R4_READING); Serial.print(" ");
+    Serial.println();
+
+    delay(2000);
+  }
+    /**/
+
+  // CHECK SENSORS PROTOCOL
+  // Print entry message
   delay(5000);
   Serial.println("***CHECK SENSOR READINGS***");
   Serial.println("IF THE LIGHT IS: ");
@@ -173,13 +223,12 @@ void setup() {
   Serial.print("\t"); Serial.println("BLINKING RED >>> SENSOR CHECK HAS FAILED :(");
   Serial.print("\t"); Serial.println("GREEN >>> CONTINUE WITH THE EXPERIMENT :)");
 
-  // CHECK Sensors
   // Turn off LED lights except for reed
   digitalWrite(check_red_LED, HIGH);
   digitalWrite(check_yellow_LED, LOW);
   digitalWrite(check_green_LED, LOW);
 
-  // PRINT MESSAGE TO USER
+  // Print message to user. Lets them know the computer is doing something 
   Serial.println();
   Serial.println("COLLECTING AND EVALUATING SENSOR READINGS...");
   Serial.println();
@@ -198,15 +247,15 @@ void setup() {
 
   // Fill arrays
   for (int i = 0; i < _NUM_READINGS; i++){
-    CHECK_R1[i] = IR_SENSOR_R1.distance();
-    CHECK_R2[i] = IR_SENSOR_R2.distance();
-    CHECK_R3[i] = IR_SENSOR_R3.distance();
-    CHECK_R4[i] = IR_SENSOR_R4.distance();
+    CHECK_R1[i] = IR_SENSOR_R1.distance(); delay(10); CHECK_R1[i] = IR_SENSOR_R1.distance();
+    CHECK_R2[i] = IR_SENSOR_R2.distance(); delay(10); CHECK_R2[i] = IR_SENSOR_R2.distance();
+    CHECK_R3[i] = IR_SENSOR_R3.distance(); delay(10); CHECK_R3[i] = IR_SENSOR_R3.distance();
+    CHECK_R4[i] = IR_SENSOR_R4.distance(); delay(10); CHECK_R4[i] = IR_SENSOR_R4.distance();
 
-    CHECK_L1[i] = IR_SENSOR_L1.distance();
-    CHECK_L2[i] = IR_SENSOR_L2.distance();
-    CHECK_L3[i] = IR_SENSOR_L3.distance();
-    CHECK_L4[i] = IR_SENSOR_L4.distance();
+    CHECK_L1[i] = IR_SENSOR_L1.distance(); delay(10); CHECK_L1[i] = IR_SENSOR_L1.distance();
+    CHECK_L2[i] = IR_SENSOR_L2.distance(); delay(10); CHECK_L2[i] = IR_SENSOR_L2.distance();
+    CHECK_L3[i] = IR_SENSOR_L3.distance(); delay(10); CHECK_L3[i] = IR_SENSOR_L3.distance();
+    CHECK_L4[i] = IR_SENSOR_L4.distance(); delay(10); CHECK_L4[i] = IR_SENSOR_L4.distance();
 
     // Blink yellow LED
     unsigned long YELLOW_LED_START_TIME = millis();
@@ -254,12 +303,13 @@ void setup() {
     // The minimum found using 400 values is always greater than the true minimum.
     // We subtract 2 from the minimum found using 400 values to approximate the true minimum.
     MIN_ARRAY[i] -= 2;
-    if (MIN_ARRAY[i] < IR_THRESHOLDS[i]){
+    if (MIN_ARRAY[i] < IR_THRESHOLD){
       TEST_PASS = false;
     }
   }
 
   // TURN ON LED LIGHT BASED ON CHECK SENSOR OUTCOME
+  // If check sensor protocol passed
   if (TEST_PASS){
     // Message to user
     Serial.println("Sensor check complete! Continue with the experiment.");
@@ -269,6 +319,7 @@ void setup() {
     digitalWrite(check_yellow_LED, LOW);
     digitalWrite(check_red_LED, LOW);
 
+  // if check sensor protcol failed. while(true) forces user to call for help
   } else if (!TEST_PASS){
     bool TEST_START = false;
 
@@ -288,7 +339,7 @@ void setup() {
       digitalWrite(check_red_LED, RED_STATE);
       delay(300);
 
-      // Recover minimum values from readings
+      // Recover minimum values from readings. Can input 2 on serial monitor, or Alt-T on Bonsai-Rx to see values
       int x = Serial.parseInt();
       if (x==2){
         TEST_START = true;
@@ -307,51 +358,38 @@ void setup() {
         Serial.println();
 
         Serial.println("Current sensor values: ");
-        Serial.println("L1 L2 R1 R2");
-        Serial.print(IR_SENSOR_L1.distance()); Serial.print(" ");
-        Serial.print(IR_SENSOR_L2.distance()); Serial.print(" ");
-        Serial.print(IR_SENSOR_R1.distance()); Serial.print(" ");
-        Serial.print(IR_SENSOR_R2.distance());
-        Serial.println();
-
-        Serial.println("Sensor thresholds: ");
+        L1_READING = IR_SENSOR_L1.distance(); delay(10); L1_READING = IR_SENSOR_L1.distance();
+        L2_READING = IR_SENSOR_L2.distance(); delay(10); L2_READING = IR_SENSOR_L2.distance();
+        L3_READING = IR_SENSOR_L3.distance(); delay(10); L3_READING = IR_SENSOR_L3.distance();
+        L4_READING = IR_SENSOR_L4.distance(); delay(10); L4_READING = IR_SENSOR_L4.distance();
+    
+        R1_READING = IR_SENSOR_R1.distance(); delay(10); R1_READING = IR_SENSOR_R1.distance();
+        R2_READING = IR_SENSOR_R2.distance(); delay(10); R2_READING = IR_SENSOR_R2.distance();
+        R3_READING = IR_SENSOR_R3.distance(); delay(10); R3_READING = IR_SENSOR_R3.distance();
+        R4_READING = IR_SENSOR_R4.distance(); delay(10); R4_READING = IR_SENSOR_R4.distance();
         Serial.println("L1 L2 L3 L4 R1 R2 R3 R4");
-        for (int i = 0; i < (sizeof(IR_THRESHOLDS) / sizeof(IR_THRESHOLDS[0])); i++){
-          Serial.print(IR_THRESHOLDS[i]); Serial.print(" ");
-        }
+        Serial.print(L1_READING); Serial.print(" ");
+        Serial.print(L2_READING); Serial.print(" ");
+        Serial.print(L3_READING); Serial.print(" ");
+        Serial.print(L4_READING); Serial.print(" ");
+        Serial.print(R1_READING); Serial.print(" ");
+        Serial.print(R2_READING); Serial.print(" ");
+        Serial.print(R3_READING); Serial.print(" ");
+        Serial.print(R4_READING); Serial.print(" ");
         Serial.println();
       }
     }
 
+  // if something goes completely wrong, yellow light turns on, and user is forced to call for help 
   } else {
     digitalWrite(check_yellow_LED, HIGH);
-  }
-
-  /*
-  // TEST SENSORS
-  // uncomment when you want to test
-  while (true){
-    Serial.print("Left 1: ");
-    Serial.println(IR_SENSOR_L1.distance());
-    Serial.print("Left 2: ");
-    Serial.println(IR_SENSOR_L2.distance());
-    Serial.print("Left 3: ");
-    Serial.println(IR_SENSOR_L3.distance());
-    Serial.print("Left 4: ");
-    Serial.println(IR_SENSOR_L4.distance());
-
-    Serial.print("Right 1: ");
-    Serial.println(IR_SENSOR_R1.distance());
-    Serial.print("Right 2: ");
-    Serial.println(IR_SENSOR_R2.distance());
-    Serial.print("Right 3: ");
-    Serial.println(IR_SENSOR_R3.distance());
-    Serial.print("Right 4: ");
-    Serial.println(IR_SENSOR_R4.distance());
-
-    delay(2000);
+    
+    // Message to user
+    Serial.println("Sensor check has failed. Please contact either Rodrigo or Audrey.");
+    while(true) {
+      
     }
-    /**/
+  }
 
 
 }
@@ -372,7 +410,7 @@ void loop() {
   }
 
 
-  // TEST CHAMBER
+  // TEST CHAMBER COMPONENTS
   if (TEST_START) {
 
     // RESET SERIAL INPUT FROM BONSAI-RX
@@ -424,7 +462,8 @@ void loop() {
   TOTAL_AVOIDANCE_SUCCESS = 0;
   ESCAPE_LATENCY_CUMULATIVE = 0;
 
-  // START SESSION
+
+  // START EXPERIMENT SESSION
   if (SESSION_START) {
 
     // RESET SERIAL INPUT FROM BONSAI-RX
@@ -549,17 +588,26 @@ void loop() {
 
       // DETECT POSITION, DELIVER CS AND US
       while (true) {
-
-        if (IR_SENSOR_R1.distance() < IR_THRESHOLD_R1 ||
-        IR_SENSOR_R2.distance() < IR_THRESHOLD_R2 ||
-        IR_SENSOR_R3.distance() < IR_THRESHOLD_R3 ||
-        IR_SENSOR_R4.distance() < IR_THRESHOLD_R4) {
+        L1_READING = IR_SENSOR_L1.distance(); sensor_cal.CheckDelay(); L1_READING = IR_SENSOR_L1.distance();
+        L2_READING = IR_SENSOR_L2.distance(); sensor_cal.CheckDelay(); L2_READING = IR_SENSOR_L2.distance();
+        L3_READING = IR_SENSOR_L3.distance(); sensor_cal.CheckDelay(); L3_READING = IR_SENSOR_L3.distance();
+        L4_READING = IR_SENSOR_L4.distance(); sensor_cal.CheckDelay(); L4_READING = IR_SENSOR_L4.distance();
+    
+        R1_READING = IR_SENSOR_R1.distance(); sensor_cal.CheckDelay(); R1_READING = IR_SENSOR_R1.distance();
+        R2_READING = IR_SENSOR_R2.distance(); sensor_cal.CheckDelay(); R2_READING = IR_SENSOR_R2.distance();
+        R3_READING = IR_SENSOR_R3.distance(); sensor_cal.CheckDelay(); R3_READING = IR_SENSOR_R3.distance();
+        R4_READING = IR_SENSOR_R4.distance(); sensor_cal.CheckDelay(); R4_READING = IR_SENSOR_R4.distance();
+        
+        if (IR_SENSOR_R1.distance() < IR_THRESHOLD ||
+        IR_SENSOR_R2.distance() < IR_THRESHOLD ||
+        IR_SENSOR_R3.distance() < IR_THRESHOLD ||
+        IR_SENSOR_R4.distance() < IR_THRESHOLD) {
           RIGHT_ACTIVE = HIGH;
           LEFT_ACTIVE = LOW;
-        } else if (IR_SENSOR_L1.distance() < IR_THRESHOLD_L1 ||
-        IR_SENSOR_L2.distance() < IR_THRESHOLD_L2 ||
-        IR_SENSOR_L3.distance() < IR_THRESHOLD_L3 ||
-        IR_SENSOR_L4.distance() < IR_THRESHOLD_L4) {
+        } else if (IR_SENSOR_L1.distance() < IR_THRESHOLD ||
+        IR_SENSOR_L2.distance() < IR_THRESHOLD ||
+        IR_SENSOR_L3.distance() < IR_THRESHOLD ||
+        IR_SENSOR_L4.distance() < IR_THRESHOLD) {
           LEFT_ACTIVE = HIGH;
           RIGHT_ACTIVE = LOW;
         } else {
@@ -599,11 +647,14 @@ void loop() {
 
           // WHILE THE OPPOSITE COMPARTMENT IS NOT ACTIVE, CONTINUE FOR TONE_DURATION
           while (true) {
+            L1_READING = IR_SENSOR_L1.distance(); sensor_cal.CheckDelay(); L1_READING = IR_SENSOR_L1.distance();
+            L2_READING = IR_SENSOR_L2.distance(); sensor_cal.CheckDelay(); L2_READING = IR_SENSOR_L2.distance();
+            L3_READING = IR_SENSOR_L3.distance(); sensor_cal.CheckDelay(); L3_READING = IR_SENSOR_L3.distance();
 
             // CHECK IF LEFT IS ACTIVE
-            if (IR_SENSOR_L1.distance() < IR_THRESHOLD_L1 ||
-            IR_SENSOR_L2.distance() < IR_THRESHOLD_L2 ||
-            IR_SENSOR_L3.distance() < IR_THRESHOLD_L3) {
+            if (IR_SENSOR_L1.distance() < IR_THRESHOLD ||
+            IR_SENSOR_L2.distance() < IR_THRESHOLD ||
+            IR_SENSOR_L3.distance() < IR_THRESHOLD) {
               LEFT_ACTIVE = HIGH;
               RIGHT_ACTIVE = LOW;
             } else {
@@ -700,11 +751,14 @@ void loop() {
 
           // WHILE THE OPPOSITE COMPARTMENT IS NOT ACTIVE, CONTINUE FOR TONE_DURATION
           while (true) {
+            R2_READING = IR_SENSOR_R2.distance(); sensor_cal.CheckDelay(); R2_READING = IR_SENSOR_R2.distance();
+            R3_READING = IR_SENSOR_R3.distance(); sensor_cal.CheckDelay(); R3_READING = IR_SENSOR_R3.distance();
+            R4_READING = IR_SENSOR_R4.distance(); sensor_cal.CheckDelay(); R4_READING = IR_SENSOR_R4.distance();
 
             // CHECK IF RIGHT IS ACTIVE
-            if (IR_SENSOR_R2.distance() < IR_THRESHOLD_R2 ||
-            IR_SENSOR_R3.distance() < IR_THRESHOLD_R3 ||
-            IR_SENSOR_R4.distance() < IR_THRESHOLD_R4) {
+            if (IR_SENSOR_R2.distance() < IR_THRESHOLD ||
+            IR_SENSOR_R3.distance() < IR_THRESHOLD ||
+            IR_SENSOR_R4.distance() < IR_THRESHOLD) {
               RIGHT_ACTIVE = HIGH;
               LEFT_ACTIVE = LOW;
             } else {
