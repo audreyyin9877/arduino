@@ -36,19 +36,19 @@
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="io:SerialStringWrite">
-          <io:PortName>COM3</io:PortName>
+          <io:PortName>COM10</io:PortName>
           <io:NewLine>\r\n</io:NewLine>
         </Combinator>
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="io:SerialStringWrite">
-          <io:PortName>COM3</io:PortName>
+          <io:PortName>COM11</io:PortName>
           <io:NewLine>\r\n</io:NewLine>
         </Combinator>
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="io:SerialStringWrite">
-          <io:PortName>COM3</io:PortName>
+          <io:PortName>COM9</io:PortName>
           <io:NewLine>\r\n</io:NewLine>
         </Combinator>
       </Expression>
@@ -78,19 +78,19 @@
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="io:SerialStringWrite">
-          <io:PortName>COM3</io:PortName>
+          <io:PortName>COM10</io:PortName>
           <io:NewLine>\r\n</io:NewLine>
         </Combinator>
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="io:SerialStringWrite">
-          <io:PortName>COM3</io:PortName>
+          <io:PortName>COM11</io:PortName>
           <io:NewLine>\r\n</io:NewLine>
         </Combinator>
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="io:SerialStringWrite">
-          <io:PortName>COM3</io:PortName>
+          <io:PortName>COM9</io:PortName>
           <io:NewLine>\r\n</io:NewLine>
         </Combinator>
       </Expression>
@@ -136,7 +136,7 @@
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="io:SerialStringRead">
-          <io:PortName>COM3</io:PortName>
+          <io:PortName>COM10</io:PortName>
           <io:NewLine>\r\n</io:NewLine>
         </Combinator>
       </Expression>
@@ -195,7 +195,7 @@
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="io:SerialStringRead">
-          <io:PortName>COM3</io:PortName>
+          <io:PortName>COM11</io:PortName>
           <io:NewLine>\r\n</io:NewLine>
         </Combinator>
       </Expression>
@@ -254,7 +254,7 @@
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="io:SerialStringRead">
-          <io:PortName>COM3</io:PortName>
+          <io:PortName>COM9</io:PortName>
           <io:NewLine>\r\n</io:NewLine>
         </Combinator>
       </Expression>
