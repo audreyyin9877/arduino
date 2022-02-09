@@ -24,7 +24,7 @@ int CS_FREQUENCY = 5000;                                       // IN HERTZ
 int ITI_INTERVALS[] = {40, 60, 80, 100, 120};                  // list of the inter-trial-intervals: ITI
 unsigned long MOTION_DETECTION_DURATION = 30;                  // SECONDS
 const int OPTO_FULL_DURATION = 5;                              // SECONDS
-const int OPTO_FLICKER_DURATION = 20;                          // MS. Due to lag, the true flicker duration is 24-25ms
+const int OPTO_FLICKER_DURATION = 25;                          // IN HERTZ. Due to lag, the true frequency is 20Hz 
 //##################################################################################################################
 //##################################################################################################################
 //##################################################################################################################
@@ -580,12 +580,13 @@ void loop() {
           // WHILE THE OPPOSITE COMPARTMENT IS NOT ACTIVE, CONTINUE FOR TONE_DURATION
           while (true) {
 
-            // OPTOGENETICS PROTOCOL
+            // OPTOGENETICS PROTOCOL. Since OPTO_FLICKER_DURATION is written in Hz, we have to convert it to ms. We divide the period 
+            // by 2 to reflect the actual blink duration. 
             OPTO_CURRENT = millis();
             OPTO_FLICKER_START = millis();
             // TURN ON LED OPTOGENETICS FOR OPTO_FULL_DURATION
             if ((OPTO_CURRENT - OPTO_START) < (OPTO_FULL_DURATION * 1000)){
-              if (OPTO_FLICKER_START - OPTO_FLICKER_PREVIOUS >= OPTO_FLICKER_DURATION){
+              if (OPTO_FLICKER_START - OPTO_FLICKER_PREVIOUS >= ((1/OPTO_FLICKER_DURATION)*500)){
                 OPTO_FLICKER_PREVIOUS = OPTO_FLICKER_START;
 
                 if (OPTO_STATE == LOW){
