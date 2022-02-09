@@ -300,9 +300,6 @@ void setup() {
                               MIN_R1, MIN_R2, MIN_R3, MIN_R4};
 
   for (int i = 0; i < (sizeof(MIN_ARRAY) / sizeof(MIN_ARRAY[0])); i++){
-    // The minimum found using 400 values is always greater than the true minimum.
-    // We subtract 2 from the minimum found using 400 values to approximate the true minimum.
-    MIN_ARRAY[i] -= 2;
     if (MIN_ARRAY[i] < IR_THRESHOLD){
       TEST_PASS = false;
     }
