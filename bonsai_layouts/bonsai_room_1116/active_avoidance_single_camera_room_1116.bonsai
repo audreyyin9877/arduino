@@ -36,13 +36,13 @@
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="io:SerialStringWrite">
-          <io:PortName>COM4</io:PortName>
+          <io:PortName>COM3</io:PortName>
           <io:NewLine>\r\n</io:NewLine>
         </Combinator>
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="io:SerialStringWrite">
-          <io:PortName>COM3</io:PortName>
+          <io:PortName>COM4</io:PortName>
           <io:NewLine>\r\n</io:NewLine>
         </Combinator>
       </Expression>
@@ -84,13 +84,13 @@
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="io:SerialStringWrite">
-          <io:PortName>COM4</io:PortName>
+          <io:PortName>COM3</io:PortName>
           <io:NewLine>\r\n</io:NewLine>
         </Combinator>
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="io:SerialStringWrite">
-          <io:PortName>COM3</io:PortName>
+          <io:PortName>COM4</io:PortName>
           <io:NewLine>\r\n</io:NewLine>
         </Combinator>
       </Expression>
@@ -120,31 +120,35 @@
           <rx:Interval>PT0.05S</rx:Interval>
         </Combinator>
       </Expression>
-      <Expression xsi:type="io:CsvWriter">
-        <io:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 01\_box01_vid_ts_raw_.csv</io:FileName>
-        <io:Append>false</io:Append>
-        <io:Overwrite>false</io:Overwrite>
-        <io:Suffix>None</io:Suffix>
-        <io:IncludeHeader>false</io:IncludeHeader>
-        <io:Selector>Timestamp</io:Selector>
+      <Expression xsi:type="Disable">
+        <Builder xsi:type="io:CsvWriter">
+          <io:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 01\_box01_vid_ts_raw_.csv</io:FileName>
+          <io:Append>false</io:Append>
+          <io:Overwrite>false</io:Overwrite>
+          <io:Suffix>None</io:Suffix>
+          <io:IncludeHeader>false</io:IncludeHeader>
+          <io:Selector>Timestamp</io:Selector>
+        </Builder>
       </Expression>
       <Expression xsi:type="MemberSelector">
         <Selector>Value</Selector>
       </Expression>
-      <Expression xsi:type="Combinator">
-        <Combinator xsi:type="cv:VideoWriter">
-          <cv:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 01\_box01_vid_.avi</cv:FileName>
-          <cv:Suffix>None</cv:Suffix>
-          <cv:Buffered>true</cv:Buffered>
-          <cv:Overwrite>false</cv:Overwrite>
-          <cv:FourCC>FMP4</cv:FourCC>
-          <cv:FrameRate>20</cv:FrameRate>
-          <cv:FrameSize>
-            <cv:Width>0</cv:Width>
-            <cv:Height>0</cv:Height>
-          </cv:FrameSize>
-          <cv:ResizeInterpolation>NearestNeighbor</cv:ResizeInterpolation>
-        </Combinator>
+      <Expression xsi:type="Disable">
+        <Builder xsi:type="Combinator">
+          <Combinator xsi:type="cv:VideoWriter">
+            <cv:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 01\_box01_vid_.avi</cv:FileName>
+            <cv:Suffix>None</cv:Suffix>
+            <cv:Buffered>true</cv:Buffered>
+            <cv:Overwrite>false</cv:Overwrite>
+            <cv:FourCC>FMP4</cv:FourCC>
+            <cv:FrameRate>20</cv:FrameRate>
+            <cv:FrameSize>
+              <cv:Width>0</cv:Width>
+              <cv:Height>0</cv:Height>
+            </cv:FrameSize>
+            <cv:ResizeInterpolation>NearestNeighbor</cv:ResizeInterpolation>
+          </Combinator>
+        </Builder>
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="io:SerialStringRead">
@@ -158,12 +162,14 @@
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="rx:Timestamp" />
       </Expression>
-      <Expression xsi:type="io:CsvWriter">
-        <io:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 01\_box01_ard_ts_raw_.csv</io:FileName>
-        <io:Append>false</io:Append>
-        <io:Overwrite>false</io:Overwrite>
-        <io:Suffix>None</io:Suffix>
-        <io:IncludeHeader>false</io:IncludeHeader>
+      <Expression xsi:type="Disable">
+        <Builder xsi:type="io:CsvWriter">
+          <io:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 01\_box01_ard_ts_raw_.csv</io:FileName>
+          <io:Append>false</io:Append>
+          <io:Overwrite>false</io:Overwrite>
+          <io:Suffix>None</io:Suffix>
+          <io:IncludeHeader>false</io:IncludeHeader>
+        </Builder>
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="vid:VideoCaptureDevice">
@@ -179,31 +185,35 @@
           <rx:Interval>PT0.05S</rx:Interval>
         </Combinator>
       </Expression>
-      <Expression xsi:type="io:CsvWriter">
-        <io:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 02\_box02_vid_ts_raw_.csv</io:FileName>
-        <io:Append>false</io:Append>
-        <io:Overwrite>false</io:Overwrite>
-        <io:Suffix>None</io:Suffix>
-        <io:IncludeHeader>false</io:IncludeHeader>
-        <io:Selector>Timestamp</io:Selector>
+      <Expression xsi:type="Disable">
+        <Builder xsi:type="io:CsvWriter">
+          <io:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 02\_box02_vid_ts_raw_.csv</io:FileName>
+          <io:Append>false</io:Append>
+          <io:Overwrite>false</io:Overwrite>
+          <io:Suffix>None</io:Suffix>
+          <io:IncludeHeader>false</io:IncludeHeader>
+          <io:Selector>Timestamp</io:Selector>
+        </Builder>
       </Expression>
       <Expression xsi:type="MemberSelector">
         <Selector>Value</Selector>
       </Expression>
-      <Expression xsi:type="Combinator">
-        <Combinator xsi:type="cv:VideoWriter">
-          <cv:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 02\_box02_vid_.avi</cv:FileName>
-          <cv:Suffix>None</cv:Suffix>
-          <cv:Buffered>true</cv:Buffered>
-          <cv:Overwrite>false</cv:Overwrite>
-          <cv:FourCC>FMP4</cv:FourCC>
-          <cv:FrameRate>20</cv:FrameRate>
-          <cv:FrameSize>
-            <cv:Width>0</cv:Width>
-            <cv:Height>0</cv:Height>
-          </cv:FrameSize>
-          <cv:ResizeInterpolation>NearestNeighbor</cv:ResizeInterpolation>
-        </Combinator>
+      <Expression xsi:type="Disable">
+        <Builder xsi:type="Combinator">
+          <Combinator xsi:type="cv:VideoWriter">
+            <cv:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 02\_box02_vid_.avi</cv:FileName>
+            <cv:Suffix>None</cv:Suffix>
+            <cv:Buffered>true</cv:Buffered>
+            <cv:Overwrite>false</cv:Overwrite>
+            <cv:FourCC>FMP4</cv:FourCC>
+            <cv:FrameRate>20</cv:FrameRate>
+            <cv:FrameSize>
+              <cv:Width>0</cv:Width>
+              <cv:Height>0</cv:Height>
+            </cv:FrameSize>
+            <cv:ResizeInterpolation>NearestNeighbor</cv:ResizeInterpolation>
+          </Combinator>
+        </Builder>
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="io:SerialStringRead">
@@ -217,12 +227,14 @@
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="rx:Timestamp" />
       </Expression>
-      <Expression xsi:type="io:CsvWriter">
-        <io:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 02\_box02_ard_ts_raw_.csv</io:FileName>
-        <io:Append>false</io:Append>
-        <io:Overwrite>false</io:Overwrite>
-        <io:Suffix>None</io:Suffix>
-        <io:IncludeHeader>false</io:IncludeHeader>
+      <Expression xsi:type="Disable">
+        <Builder xsi:type="io:CsvWriter">
+          <io:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 02\_box02_ard_ts_raw_.csv</io:FileName>
+          <io:Append>false</io:Append>
+          <io:Overwrite>false</io:Overwrite>
+          <io:Suffix>None</io:Suffix>
+          <io:IncludeHeader>false</io:IncludeHeader>
+        </Builder>
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="vid:VideoCaptureDevice">
@@ -238,31 +250,35 @@
           <rx:Interval>PT0.05S</rx:Interval>
         </Combinator>
       </Expression>
-      <Expression xsi:type="io:CsvWriter">
-        <io:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 03\_box03_vid_ts_raw_.csv</io:FileName>
-        <io:Append>false</io:Append>
-        <io:Overwrite>false</io:Overwrite>
-        <io:Suffix>None</io:Suffix>
-        <io:IncludeHeader>false</io:IncludeHeader>
-        <io:Selector>Timestamp</io:Selector>
+      <Expression xsi:type="Disable">
+        <Builder xsi:type="io:CsvWriter">
+          <io:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 03\_box03_vid_ts_raw_.csv</io:FileName>
+          <io:Append>false</io:Append>
+          <io:Overwrite>false</io:Overwrite>
+          <io:Suffix>None</io:Suffix>
+          <io:IncludeHeader>false</io:IncludeHeader>
+          <io:Selector>Timestamp</io:Selector>
+        </Builder>
       </Expression>
       <Expression xsi:type="MemberSelector">
         <Selector>Value</Selector>
       </Expression>
-      <Expression xsi:type="Combinator">
-        <Combinator xsi:type="cv:VideoWriter">
-          <cv:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 03\_box03_vid_.avi</cv:FileName>
-          <cv:Suffix>None</cv:Suffix>
-          <cv:Buffered>true</cv:Buffered>
-          <cv:Overwrite>false</cv:Overwrite>
-          <cv:FourCC>FMP4</cv:FourCC>
-          <cv:FrameRate>20</cv:FrameRate>
-          <cv:FrameSize>
-            <cv:Width>0</cv:Width>
-            <cv:Height>0</cv:Height>
-          </cv:FrameSize>
-          <cv:ResizeInterpolation>NearestNeighbor</cv:ResizeInterpolation>
-        </Combinator>
+      <Expression xsi:type="Disable">
+        <Builder xsi:type="Combinator">
+          <Combinator xsi:type="cv:VideoWriter">
+            <cv:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 03\_box03_vid_.avi</cv:FileName>
+            <cv:Suffix>None</cv:Suffix>
+            <cv:Buffered>true</cv:Buffered>
+            <cv:Overwrite>false</cv:Overwrite>
+            <cv:FourCC>FMP4</cv:FourCC>
+            <cv:FrameRate>20</cv:FrameRate>
+            <cv:FrameSize>
+              <cv:Width>0</cv:Width>
+              <cv:Height>0</cv:Height>
+            </cv:FrameSize>
+            <cv:ResizeInterpolation>NearestNeighbor</cv:ResizeInterpolation>
+          </Combinator>
+        </Builder>
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="io:SerialStringRead">
@@ -276,12 +292,14 @@
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="rx:Timestamp" />
       </Expression>
-      <Expression xsi:type="io:CsvWriter">
-        <io:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 03\_box03_ard_ts_raw_.csv</io:FileName>
-        <io:Append>false</io:Append>
-        <io:Overwrite>false</io:Overwrite>
-        <io:Suffix>None</io:Suffix>
-        <io:IncludeHeader>false</io:IncludeHeader>
+      <Expression xsi:type="Disable">
+        <Builder xsi:type="io:CsvWriter">
+          <io:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 03\_box03_ard_ts_raw_.csv</io:FileName>
+          <io:Append>false</io:Append>
+          <io:Overwrite>false</io:Overwrite>
+          <io:Suffix>None</io:Suffix>
+          <io:IncludeHeader>false</io:IncludeHeader>
+        </Builder>
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="vid:VideoCaptureDevice">
@@ -297,31 +315,35 @@
           <rx:Interval>PT0.05S</rx:Interval>
         </Combinator>
       </Expression>
-      <Expression xsi:type="io:CsvWriter">
-        <io:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 04\_box04_vid_ts_raw_.csv</io:FileName>
-        <io:Append>false</io:Append>
-        <io:Overwrite>false</io:Overwrite>
-        <io:Suffix>None</io:Suffix>
-        <io:IncludeHeader>false</io:IncludeHeader>
-        <io:Selector>Timestamp</io:Selector>
+      <Expression xsi:type="Disable">
+        <Builder xsi:type="io:CsvWriter">
+          <io:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 04\_box04_vid_ts_raw_.csv</io:FileName>
+          <io:Append>false</io:Append>
+          <io:Overwrite>false</io:Overwrite>
+          <io:Suffix>None</io:Suffix>
+          <io:IncludeHeader>false</io:IncludeHeader>
+          <io:Selector>Timestamp</io:Selector>
+        </Builder>
       </Expression>
       <Expression xsi:type="MemberSelector">
         <Selector>Value</Selector>
       </Expression>
-      <Expression xsi:type="Combinator">
-        <Combinator xsi:type="cv:VideoWriter">
-          <cv:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 04\_box04_vid_.avi</cv:FileName>
-          <cv:Suffix>None</cv:Suffix>
-          <cv:Buffered>true</cv:Buffered>
-          <cv:Overwrite>false</cv:Overwrite>
-          <cv:FourCC>FMP4</cv:FourCC>
-          <cv:FrameRate>20</cv:FrameRate>
-          <cv:FrameSize>
-            <cv:Width>0</cv:Width>
-            <cv:Height>0</cv:Height>
-          </cv:FrameSize>
-          <cv:ResizeInterpolation>NearestNeighbor</cv:ResizeInterpolation>
-        </Combinator>
+      <Expression xsi:type="Disable">
+        <Builder xsi:type="Combinator">
+          <Combinator xsi:type="cv:VideoWriter">
+            <cv:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 04\_box04_vid_.avi</cv:FileName>
+            <cv:Suffix>None</cv:Suffix>
+            <cv:Buffered>true</cv:Buffered>
+            <cv:Overwrite>false</cv:Overwrite>
+            <cv:FourCC>FMP4</cv:FourCC>
+            <cv:FrameRate>20</cv:FrameRate>
+            <cv:FrameSize>
+              <cv:Width>0</cv:Width>
+              <cv:Height>0</cv:Height>
+            </cv:FrameSize>
+            <cv:ResizeInterpolation>NearestNeighbor</cv:ResizeInterpolation>
+          </Combinator>
+        </Builder>
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="io:SerialStringRead">
@@ -335,12 +357,14 @@
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="rx:Timestamp" />
       </Expression>
-      <Expression xsi:type="io:CsvWriter">
-        <io:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 04\_box04_ard_ts_raw_.csv</io:FileName>
-        <io:Append>false</io:Append>
-        <io:Overwrite>false</io:Overwrite>
-        <io:Suffix>None</io:Suffix>
-        <io:IncludeHeader>false</io:IncludeHeader>
+      <Expression xsi:type="Disable">
+        <Builder xsi:type="io:CsvWriter">
+          <io:FileName>C:\Users\shopadmin\Desktop\Bonsai Output\chamber 04\_box04_ard_ts_raw_.csv</io:FileName>
+          <io:Append>false</io:Append>
+          <io:Overwrite>false</io:Overwrite>
+          <io:Suffix>None</io:Suffix>
+          <io:IncludeHeader>false</io:IncludeHeader>
+        </Builder>
       </Expression>
     </Nodes>
     <Edges>
