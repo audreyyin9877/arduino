@@ -191,6 +191,7 @@ void setup() {
     Serial.print(L2_READING); Serial.print(" ");
     Serial.print(R1_READING); Serial.print(" ");
     Serial.print(R2_READING); Serial.print(" ");
+    Serial.println(); 
   
     delay(1000);
   }
