@@ -138,9 +138,40 @@ SharpIR IR_SENSOR_L2 = SharpIR(ir_left2, model);
 
 // SENSOR THRESHOLDS
 int IF_THRESHOLD = 20;                                   // CM > DISTANCE FROM SENSOR TO OPPOSITE WALL.
+
+// SENSOR READINGS
+int L1_READING; int L2_READING; 
+int R1_READING; int R2_READING; 
 //##################################################################################################################
+// Analog readings from multiple pinds are very inaccurate. The trick is to read them twice, with a small dealy after each read
+// (10ms tends is good), then discard the first reading. This is because the ADC multiplexier needs switching time and the voltage 
+// needs time to stabalize after switching. To see more, check: https://forum.arduino.cc/t/reading-multiple-analog-inputs/55019 
 
+// This class calls for a delay in ms without using a delay. 
+class Timer {
+  // Class Member Variables
+  long onTime;                        // milliseconds of delay being on 
+  unsigned long sensor_cal_start;     // will store the last time LED was updated
 
+  public: 
+  Timer(long on){
+    onTime = on; 
+    sensor_cal_start = 0; 
+  }
+
+  void CheckDelay() {
+    // check to see if it's time to stop the delay 
+    unsigned long sensor_cal_current = millis(); 
+
+    while (sensor_cal_start - sensor_cal_current < onTime) {
+            sensor_cal_start = millis();
+    }
+  }
+};
+
+// Create a Timer object. 
+Timer sensor_cal(10); 
+//##################################################################################################################
 
 void setup() {
 
@@ -169,14 +200,17 @@ void setup() {
   /*
   // UNCOMMENT TO TEST SENSORS
   while (true) {
-    Serial.print("L1: ");
-    Serial.println(IR_SENSOR_L1.distance());
-    Serial.print("L2: ");
-    Serial.println(IR_SENSOR_L2.distance());
-    Serial.print("R1: ");
-    Serial.println(IR_SENSOR_R1.distance());
-    Serial.print("R2: ");
-    Serial.println(IR_SENSOR_R2.distance());
+    L1_READING = IR_SENSOR_L1.distance(); delay(10); L1_READING = IR_SENSOR_L1.distance();
+    L2_READING = IR_SENSOR_L2.distance(); delay(10); L2_READING = IR_SENSOR_L2.distance();
+    R1_READING = IR_SENSOR_R1.distance(); delay(10); R1_READING = IR_SENSOR_R1.distance();
+    R2_READING = IR_SENSOR_R2.distance(); delay(10); R2_READING = IR_SENSOR_R2.distance();
+
+    Serial.println("L1 L2 R1 R2");
+    Serial.print(L1_READING); Serial.print(" ");
+    Serial.print(L2_READING); Serial.print(" ");
+    Serial.print(R1_READING); Serial.print(" ");
+    Serial.print(R2_READING); Serial.print(" ");
+  
     delay(1000);
   }
   /**/
@@ -211,11 +245,11 @@ void setup() {
 
   // Fill arrays
   for (int i = 0; i < _NUM_READINGS; i++){
-    CHECK_R1[i] = IR_SENSOR_R1.distance();
-    CHECK_R2[i] = IR_SENSOR_R2.distance();
+    CHECK_R1[i] = IR_SENSOR_R1.distance(); delay(10); CHECK_R1[i] = IR_SENSOR_R1.distance();
+    CHECK_R2[i] = IR_SENSOR_R2.distance(); delay(10); CHECK_R2[i] = IR_SENSOR_R2.distance();
 
-    CHECK_L1[i] = IR_SENSOR_L1.distance();
-    CHECK_L2[i] = IR_SENSOR_L2.distance();
+    CHECK_L1[i] = IR_SENSOR_L1.distance(); delay(10); CHECK_L1[i] = IR_SENSOR_L1.distance();
+    CHECK_L2[i] = IR_SENSOR_L2.distance(); delay(10); CHECK_L2[i] = IR_SENSOR_L2.distance();
 
     // Blink yellow LED
     unsigned long YELLOW_LED_START_TIME = millis();
@@ -308,19 +342,16 @@ void setup() {
         }
         Serial.println();
 
-        Serial.println("Current sensor values: ");
+        Serial.println("Current sensor values: "); 
+        L1_READING = IR_SENSOR_L1.distance(); delay(10); L1_READING = IR_SENSOR_L1.distance();
+        L2_READING = IR_SENSOR_L2.distance(); delay(10); L2_READING = IR_SENSOR_L2.distance();
+        R1_READING = IR_SENSOR_R1.distance(); delay(10); R1_READING = IR_SENSOR_R1.distance();
+        R2_READING = IR_SENSOR_R2.distance(); delay(10); R2_READING = IR_SENSOR_R2.distance();
         Serial.println("L1 L2 R1 R2");
-        Serial.print(IR_SENSOR_L1.distance()); Serial.print(" ");
-        Serial.print(IR_SENSOR_L2.distance()); Serial.print(" ");
-        Serial.print(IR_SENSOR_R1.distance()); Serial.print(" ");
-        Serial.print(IR_SENSOR_R2.distance());
-        Serial.println();
-
-        Serial.println("Sensor thresholds: ");
-        Serial.println("L1 L2 R1 R2");
-        for (int i = 0; i < (sizeof(MIN_ARRAY) / sizeof(MIN_ARRAY[0])); i++){
-          Serial.print(IF_THRESHOLD); Serial.print(" ");
-        }
+        Serial.print(L1_READING); Serial.print(" ");
+        Serial.print(L2_READING); Serial.print(" ");
+        Serial.print(R1_READING); Serial.print(" ");
+        Serial.print(R2_READING); Serial.print(" ");
         Serial.println();
       }
     }
@@ -551,13 +582,17 @@ void loop() {
 
       // DETECT POSITION, DELIVER CS AND US
       while (true) {
-
-        if (IR_SENSOR_R1.distance() < IF_THRESHOLD
-            || IR_SENSOR_R2.distance() < IF_THRESHOLD) {
+        L1_READING = IR_SENSOR_L1.distance(); sensor_cal.CheckDelay(); L1_READING = IR_SENSOR_L1.distance();
+        L2_READING = IR_SENSOR_L2.distance(); sensor_cal.CheckDelay(); L2_READING = IR_SENSOR_L2.distance();
+        R1_READING = IR_SENSOR_R1.distance(); sensor_cal.CheckDelay(); R1_READING = IR_SENSOR_R1.distance();
+        R2_READING = IR_SENSOR_R2.distance(); sensor_cal.CheckDelay(); R2_READING = IR_SENSOR_R2.distance();
+        
+        if (R1_READING < IF_THRESHOLD
+            || R2_READING < IF_THRESHOLD) {
           RIGHT_ACTIVE = HIGH;
           LEFT_ACTIVE = LOW;
-        } else if (IR_SENSOR_L1.distance() < IF_THRESHOLD
-                   || IR_SENSOR_L2.distance() < IF_THRESHOLD) {
+        } else if (L1_READING < IF_THRESHOLD
+                   || L2_READING < IF_THRESHOLD) {
           LEFT_ACTIVE = HIGH;
           RIGHT_ACTIVE = LOW;
         } else {
@@ -637,10 +672,13 @@ void loop() {
                 OPTO_END_TIMESTAMP += 1;
               }
             }
-
+            
+            L1_READING = IR_SENSOR_L1.distance(); sensor_cal.CheckDelay(); L1_READING = IR_SENSOR_L1.distance();
+            L2_READING = IR_SENSOR_L2.distance(); sensor_cal.CheckDelay(); L2_READING = IR_SENSOR_L2.distance();
+            
             // CHECK IF LEFT IS ACTIVE
-            if (IR_SENSOR_L1.distance() < IF_THRESHOLD
-                || IR_SENSOR_L2.distance() < IF_THRESHOLD) {
+            if (L1_READING < IF_THRESHOLD
+                || L2_READING < IF_THRESHOLD) {
               LEFT_ACTIVE = HIGH;
               RIGHT_ACTIVE = LOW;
             } else {
@@ -784,9 +822,12 @@ void loop() {
               }
             }
 
+            R1_READING = IR_SENSOR_R1.distance(); sensor_cal.CheckDelay(); R1_READING = IR_SENSOR_R1.distance();
+            R2_READING = IR_SENSOR_R2.distance(); sensor_cal.CheckDelay(); R2_READING = IR_SENSOR_R2.distance();
+            
             // CHECK IF RIGHT IS ACTIVE
-            if (IR_SENSOR_R1.distance() < IF_THRESHOLD
-                || IR_SENSOR_R2.distance() < IF_THRESHOLD) {
+            if (R1_READING < IF_THRESHOLD
+                || R2_READING < IF_THRESHOLD) {
               RIGHT_ACTIVE = HIGH;
               LEFT_ACTIVE = LOW;
             } else {
