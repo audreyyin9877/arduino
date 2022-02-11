@@ -181,14 +181,17 @@ void setup() {
   /*
   // UNCOMMENT TO TEST SENSORS
   while (true) {
-    Serial.print("L1: ");
-    Serial.println(IR_SENSOR_L1.distance());
-    Serial.print("L2: ");
-    Serial.println(IR_SENSOR_L2.distance());
-    Serial.print("R1: ");
-    Serial.println(IR_SENSOR_R1.distance());
-    Serial.print("R2: ");
-    Serial.println(IR_SENSOR_R2.distance());
+    L1_READING = IR_SENSOR_L1.distance(); delay(10); L1_READING = IR_SENSOR_L1.distance();
+    L2_READING = IR_SENSOR_L2.distance(); delay(10); L2_READING = IR_SENSOR_L2.distance();
+    R1_READING = IR_SENSOR_R1.distance(); delay(10); R1_READING = IR_SENSOR_R1.distance();
+    R2_READING = IR_SENSOR_R2.distance(); delay(10); R2_READING = IR_SENSOR_R2.distance();
+
+    Serial.println("L1 L2 R1 R2");
+    Serial.print(L1_READING); Serial.print(" ");
+    Serial.print(L2_READING); Serial.print(" ");
+    Serial.print(R1_READING); Serial.print(" ");
+    Serial.print(R2_READING); Serial.print(" ");
+  
     delay(1000);
   }
   /**/

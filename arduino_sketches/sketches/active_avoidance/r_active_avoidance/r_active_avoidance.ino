@@ -179,7 +179,7 @@ void setup() {
     R1_READING = IR_SENSOR_R1.distance(); delay(10); R1_READING = IR_SENSOR_R1.distance();
     R2_READING = IR_SENSOR_R2.distance(); delay(10); R2_READING = IR_SENSOR_R2.distance();
 
-    Serial.println("L1 L2 L3 L4 R1 R2 R3 R4");
+    Serial.println("L1 L2 R1 R2");
     Serial.print(L1_READING); Serial.print(" ");
     Serial.print(L2_READING); Serial.print(" ");
     Serial.print(R1_READING); Serial.print(" ");
