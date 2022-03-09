@@ -219,7 +219,7 @@ void setup() {
   Serial.println("***CHECK SENSOR READINGS***");
   Serial.println("IF THE LIGHT IS: ");
   Serial.print("\t"); Serial.println("SOLID RED >>> RESET THE BOARD");
-  Serial.print("\t"); Serial.println("BLINKING YELLOW >>> WAIT, BOARD IS CHECKING SENSORS");
+  Serial.print("\t"); Serial.println("BLINKING YELLOW >>> BOARD IS CHECKING SENSORS");
   Serial.print("\t"); Serial.println("BLINKING RED >>> SENSOR CHECK HAS FAILED :(");
   Serial.print("\t"); Serial.println("GREEN >>> CONTINUE WITH THE EXPERIMENT :)");
 
@@ -229,9 +229,7 @@ void setup() {
   digitalWrite(check_green_LED, LOW);
 
   // Print message to user. Lets them know the computer is doing something
-  Serial.println();
   Serial.println("COLLECTING AND EVALUATING SENSOR READINGS...");
-  Serial.println();
 
   // COLLECT 400 SENSOR READINGS
   // Create empty arrays
