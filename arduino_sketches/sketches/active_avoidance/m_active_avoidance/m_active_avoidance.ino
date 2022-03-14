@@ -644,10 +644,12 @@ void loop() {
           while (true) {
             L1_READING = IR_SENSOR_L1.distance(); sensor_cal.CheckDelay(); L1_READING = IR_SENSOR_L1.distance();
             L2_READING = IR_SENSOR_L2.distance(); sensor_cal.CheckDelay(); L2_READING = IR_SENSOR_L2.distance();
+            L3_READING = IR_SENSOR_L3.distance(); sensor_cal.CheckDelay(); L3_READING = IR_SENSOR_L3.distance();
 
             // CHECK IF LEFT IS ACTIVE
             if (L1_READING < IR_THRESHOLD ||
-            L2_READING < IR_THRESHOLD) {
+            L2_READING < IR_THRESHOLD ||
+            L3_READING < IR_THRESHOLD) {
               LEFT_ACTIVE = HIGH;
               RIGHT_ACTIVE = LOW;
             } else {
@@ -744,11 +746,13 @@ void loop() {
 
           // WHILE THE OPPOSITE COMPARTMENT IS NOT ACTIVE, CONTINUE FOR TONE_DURATION
           while (true) {
+            R2_READING = IR_SENSOR_R2.distance(); sensor_cal.CheckDelay(); R2_READING = IR_SENSOR_R2.distance();
             R3_READING = IR_SENSOR_R3.distance(); sensor_cal.CheckDelay(); R3_READING = IR_SENSOR_R3.distance();
             R4_READING = IR_SENSOR_R4.distance(); sensor_cal.CheckDelay(); R4_READING = IR_SENSOR_R4.distance();
 
             // CHECK IF RIGHT IS ACTIVE
-            if (R3_READING < IR_THRESHOLD ||
+            if (R2_READING < IR_THRESHOLD ||
+            R3_READING < IR_THRESHOLD ||
             R4_READING < IR_THRESHOLD) {
               RIGHT_ACTIVE = HIGH;
               LEFT_ACTIVE = LOW;
