@@ -461,9 +461,8 @@ void loop() {
 
             // TRIGGER US
             digitalWrite(shocker_l_pin, HIGH);
-            Serial.println("US_L > ON");
             digitalWrite(shocker_r_pin, HIGH);
-            Serial.println("US_R > ON");
+            Serial.println("US > ON");
 
             // KEEP US FOR SPECIFIC TIME DELAY
             for (int i = 0; i < SHOCK_DURATION; i++) {
@@ -472,9 +471,8 @@ void loop() {
 
             // TERMINATE SHOCKER
             digitalWrite(shocker_l_pin, LOW);
-            Serial.println("US_L > OFF");
             digitalWrite(shocker_r_pin, LOW);
-            Serial.println("US_R > OFF");
+            Serial.println("US > OFF");
 
             // TERMINATE TONE IN THE COMPARTMENT IF AFTER SHOCK
             SPEAKER_RIGHT.stop();
@@ -618,17 +616,19 @@ void loop() {
             if ((CURRENT_TONE_DELAY - START_TONE) > (DELTA_TONE_SHOCK * 1000)) {
 
               // TRIGGER US
+              digitalWrite(shocker_l_pin, HIGH);
               digitalWrite(shocker_r_pin, HIGH);
-              Serial.println("US_R > ON");
+              Serial.println("US > ON");
 
               // KEEP US FOR SPECIFIC TIME DELAY
               for (int i = 0; i < SHOCK_DURATION; i++) {
                 delay(1000);
               }
 
-              // TERMINATE SHOCK IN THE RIGHT COMPARTMENT
+              // TERMINATE SHOCK
+              digitalWrite(shocker_l_pin, LOW);
               digitalWrite(shocker_r_pin, LOW);
-              Serial.println("US_R > OFF");
+              Serial.println("US > OFF");
 
               // TERMINATE TONE IN THE RIGHT COMPARTMENT IF AFTER SHOCK
               SPEAKER_RIGHT.stop();
@@ -717,7 +717,8 @@ void loop() {
 
               // TRIGGER US
               digitalWrite(shocker_l_pin, HIGH);
-              Serial.println("US_L > ON");
+              digitalWrite(shocker_r_pin, HIGH);
+              Serial.println("US > ON");
 
               // KEEP US FOR SPECIFIC TIME DELAY
               for (int i = 0; i < SHOCK_DURATION; i++) {
@@ -726,7 +727,8 @@ void loop() {
 
               // TERMINATE SHOCKER
               digitalWrite(shocker_l_pin, LOW);
-              Serial.println("US_L > OFF");
+              digitalWrite(shocker_r_pin, LOW);
+              Serial.println("US > OFF");
 
               // TERMINATE TONE IN THE COMPARTMENT IF AFTER SHOCK
               SPEAKER_RIGHT.stop();
@@ -757,9 +759,8 @@ void loop() {
 
             // TRIGGER US
             digitalWrite(shocker_l_pin, HIGH);
-            Serial.println("US_L > ON");
             digitalWrite(shocker_r_pin, HIGH);
-            Serial.println("US_R > ON");
+            Serial.println("US > ON");
 
             // KEEP US FOR SPECIFIC TIME DELAY
             for (int i = 0; i < SHOCK_DURATION; i++) {
@@ -768,9 +769,8 @@ void loop() {
 
             // TERMINATE SHOCKER
             digitalWrite(shocker_l_pin, LOW);
-            Serial.println("US_L > OFF");
             digitalWrite(shocker_r_pin, LOW);
-            Serial.println("US_R > OFF");
+            Serial.println("US > OFF");
 
             // RECORD LATENCY_END WHEN NO SHUTTLING
             ESCAPE_LATENCY_END = 0;
