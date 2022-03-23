@@ -851,9 +851,6 @@ void loop() {
             // RECORD LATENCY_END WHEN NO SHUTTLING
             ESCAPE_LATENCY_END = 0;
 
-            // COUNT ONE TOWARDS AVOIDANCE FAILURE
-            TOTAL_AVOIDANCE_FAILURE ++;
-
             break;
         }
 
