@@ -119,28 +119,28 @@ SharpIR IR_SENSOR_L2 = SharpIR(ir_left2, model);
 int IF_THRESHOLD = 20;                                   // CM > DISTANCE FROM SENSOR TO OPPOSITE WALL.
 
 // SENSOR READINGS
-int L1_READING; int L2_READING; 
-int R1_READING; int R2_READING; 
+int L1_READING; int L2_READING;
+int R1_READING; int R2_READING;
 //##################################################################################################################
 // Analog readings from multiple pinds are very inaccurate. The trick is to read them twice, with a small dealy after each read
-// (10ms tends is good), then discard the first reading. This is because the ADC multiplexier needs switching time and the voltage 
-// needs time to stabalize after switching. To see more, check: https://forum.arduino.cc/t/reading-multiple-analog-inputs/55019 
+// (10ms tends is good), then discard the first reading. This is because the ADC multiplexier needs switching time and the voltage
+// needs time to stabalize after switching. To see more, check: https://forum.arduino.cc/t/reading-multiple-analog-inputs/55019
 
-// This class calls for a delay in ms without using a delay. 
+// This class calls for a delay in ms without using a delay.
 class Timer {
   // Class Member Variables
-  long onTime;                        // milliseconds of delay being on 
+  long onTime;                        // milliseconds of delay being on
   unsigned long sensor_cal_start;     // will store the last time LED was updated
 
-  public: 
+  public:
   Timer(long on){
-    onTime = on; 
-    sensor_cal_start = 0; 
+    onTime = on;
+    sensor_cal_start = 0;
   }
 
   void CheckDelay() {
-    // check to see if it's time to stop the delay 
-    unsigned long sensor_cal_current = millis(); 
+    // check to see if it's time to stop the delay
+    unsigned long sensor_cal_current = millis();
 
     while (sensor_cal_start - sensor_cal_current < onTime) {
             sensor_cal_start = millis();
@@ -148,8 +148,8 @@ class Timer {
   }
 };
 
-// Create a Timer object. 
-Timer sensor_cal(10); 
+// Create a Timer object.
+Timer sensor_cal(10);
 //##################################################################################################################
 
 void setup() {
@@ -184,8 +184,8 @@ void setup() {
     Serial.print(L2_READING); Serial.print(" ");
     Serial.print(R1_READING); Serial.print(" ");
     Serial.print(R2_READING); Serial.print(" ");
-    Serial.println(); 
-  
+    Serial.println();
+
     delay(1000);
   }
   /**/
@@ -312,7 +312,7 @@ void setup() {
         }
         Serial.println();
 
-        Serial.println("Current sensor values: "); 
+        Serial.println("Current sensor values: ");
         L1_READING = IR_SENSOR_L1.distance(); delay(10); L1_READING = IR_SENSOR_L1.distance();
         L2_READING = IR_SENSOR_L2.distance(); delay(10); L2_READING = IR_SENSOR_L2.distance();
         R1_READING = IR_SENSOR_R1.distance(); delay(10); R1_READING = IR_SENSOR_R1.distance();
@@ -778,9 +778,6 @@ void loop() {
 
             // RECORD LATENCY_END WHEN NO SHUTTLING
             ESCAPE_LATENCY_END = 0;
-
-            // COUNT ONE TOWARDS AVOIDANCE FAILURE
-            TOTAL_AVOIDANCE_FAILURE ++;
 
             break;
         }
