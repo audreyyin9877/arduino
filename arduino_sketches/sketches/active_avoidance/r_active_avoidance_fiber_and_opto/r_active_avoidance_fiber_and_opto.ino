@@ -17,13 +17,13 @@
  */
 //##################################################################################################################
 const int N_TRIALS = 20;
-unsigned long ACCLIMATION_DURATION = 20;                       // SECONDS
+unsigned long ACCLIMATION_DURATION = 200;                       // SECONDS
 unsigned long TONE_DURATION = 15;                              // SECONDS
 unsigned long SHOCK_DURATION = 1;                              // SECONDS
 int CS_FREQUENCY = 5000;                                       // IN HERTZ
 int ITI_INTERVALS[] = {40, 60, 80, 100, 120};                  // list of the inter-trial-intervals: ITI
 unsigned long MOTION_DETECTION_DURATION = 30;                  // SECONDS
-const int OPTO_FULL_DURATION = 5;                              // SECONDS
+const int OPTO_FULL_DURATION = 15;                              // SECONDS
 const int OPTO_FLICKER_DURATION = 25;                          // IN HERTZ. Due to lag, the true frequency is 20Hz
 //##################################################################################################################
 //##################################################################################################################
@@ -697,13 +697,6 @@ void loop() {
               SPEAKER_LEFT.stop();
               Serial.println("CS > OFF");
 
-              // IF LEFT IS HIGH THEN TERMINATE OPTOGENETICS LED
-              digitalWrite(opto_LED, LOW);
-              if (OPTO_END_TIMESTAMP == 0){
-                Serial.println("OPTO > OFF");
-                OPTO_END_TIMESTAMP += 1;
-              }
-
               // RECORD LATENCY_END WHEN SHUTTLING
               ESCAPE_LATENCY_END = millis();
 
@@ -817,7 +810,7 @@ void loop() {
             OPTO_FLICKER_START = millis();
             // TURN ON LED OPTOGENETICS FOR OPTO_FULL_DURATION
             if ((OPTO_CURRENT - OPTO_START) < (OPTO_FULL_DURATION * 1000)){
-              if (OPTO_FLICKER_START - OPTO_FLICKER_PREVIOUS >= OPTO_FLICKER_DURATION){
+              if (OPTO_FLICKER_START - OPTO_FLICKER_PREVIOUS >= ((1/OPTO_FLICKER_DURATION)*500)){
                 OPTO_FLICKER_PREVIOUS = OPTO_FLICKER_START;
 
                 if (OPTO_STATE == LOW){
@@ -864,13 +857,6 @@ void loop() {
               SPEAKER_LEFT.stop();
               Serial.println("CS > OFF");
 
-              // IF RIGHT IS HIGH THEN TERMINATE OPTOGENETICS LED
-              digitalWrite(opto_LED, LOW);
-              if (OPTO_END_TIMESTAMP == 0){
-                Serial.println("OPTO > OFF");
-                OPTO_END_TIMESTAMP += 1;
-              }
-
               // RECORD LATENCY_END WHEN SHUTTLING
               ESCAPE_LATENCY_END = millis();
 
@@ -895,7 +881,7 @@ void loop() {
             }
 
             // AFTER SPECIFIC DELAY, TRIGGER US
-            if ((CURRENT_TONE_DELAY - START_TONE) > (DELTA_TONE_SHOCK * 1000)) && (TRIAL_CHECK == 0) {
+            if (((CURRENT_TONE_DELAY - START_TONE) > (DELTA_TONE_SHOCK * 1000)) && (TRIAL_CHECK == 0)) {
 
               // ENSURE OPTO LED IS TURNED ON
               digitalWrite(opto_LED, HIGH);
