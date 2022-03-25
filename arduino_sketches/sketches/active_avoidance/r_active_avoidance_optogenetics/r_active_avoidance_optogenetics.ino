@@ -23,7 +23,7 @@ unsigned long SHOCK_DURATION = 1;                              // SECONDS
 int CS_FREQUENCY = 5000;                                       // IN HERTZ
 int ITI_INTERVALS[] = {40, 60, 80, 100, 120};                  // list of the inter-trial-intervals: ITI
 unsigned long MOTION_DETECTION_DURATION = 30;                  // SECONDS
-const int OPTO_FULL_DURATION = 15;                              // SECONDS
+const int OPTO_FULL_DURATION = 5;                              // SECONDS
 const int OPTO_FLICKER_DURATION = 25;                          // IN HERTZ. Due to lag, the true frequency is 20Hz
 //##################################################################################################################
 //##################################################################################################################
@@ -633,6 +633,10 @@ void loop() {
                 Serial.println("OPTO > ON");
                 OPTO_START_TIMESTAMP += 1;
               }
+            } else if (OPTO_END_TIMESTAMP == 0){ 
+              Serial.println("OPTO > OFF");
+              digitalWrite(opto_LED, LOW);
+              OPTO_END_TIMESTAMP += 1;
             }
 
             L1_READING = IR_SENSOR_L1.distance(); sensor_cal.CheckDelay(); L1_READING = IR_SENSOR_L1.distance();
@@ -673,27 +677,7 @@ void loop() {
               // RESET LEFT SENSOR VALUE
               LEFT_ACTIVE = LOW;
 
-              // continue optogenetics protcol even after shuttling
-              OPTO_CURRENT = millis();
-              OPTO_FLICKER_START = millis();
-              // TURN ON LED OPTOGENETICS FOR OPTO_FULL_DURATION
-              while ((OPTO_CURRENT - OPTO_START) < (OPTO_FULL_DURATION * 1000)){
-                if (OPTO_FLICKER_START - OPTO_FLICKER_PREVIOUS >= ((1/OPTO_FLICKER_DURATION)*500)){
-                  OPTO_FLICKER_PREVIOUS = OPTO_FLICKER_START;
-
-                  if (OPTO_STATE == LOW){
-                    OPTO_STATE = HIGH;
-                  } else {
-                    OPTO_STATE = LOW;
-                  }
-
-                  digitalWrite(opto_LED, OPTO_STATE);
-                }
-                OPTO_CURRENT = millis();
-                OPTO_FLICKER_START = millis();
-              }
-
-              // TERMINATE OPTOGENETICS LED AFTER 15 SEC
+              // TERMINATE OPTOGENETICS LED 
               digitalWrite(opto_LED, LOW);
               if (OPTO_END_TIMESTAMP == 0){
                 Serial.println("OPTO > OFF");
@@ -727,13 +711,6 @@ void loop() {
               SPEAKER_RIGHT.stop();
               SPEAKER_LEFT.stop();
               Serial.println("CS > OFF");
-
-              // TERMINATE OPTOGENETICS LED
-              digitalWrite(opto_LED, LOW);
-              if (OPTO_END_TIMESTAMP == 0){
-                Serial.println("OPTO > OFF");
-                OPTO_END_TIMESTAMP += 1;
-              }
 
               // RECORD LATENCY_END WHEN NO SHUTTLING
               ESCAPE_LATENCY_END = ESCAPE_LATENCY_START;
@@ -791,7 +768,7 @@ void loop() {
             OPTO_FLICKER_START = millis();
             // TURN ON LED OPTOGENETICS FOR OPTO_FULL_DURATION
             if ((OPTO_CURRENT - OPTO_START) < (OPTO_FULL_DURATION * 1000)){
-              if (OPTO_FLICKER_START - OPTO_FLICKER_PREVIOUS >= OPTO_FLICKER_DURATION){
+              if (OPTO_FLICKER_START - OPTO_FLICKER_PREVIOUS >= ((1/OPTO_FLICKER_DURATION)*500)){
                 OPTO_FLICKER_PREVIOUS = OPTO_FLICKER_START;
 
                 if (OPTO_STATE == LOW){
@@ -806,6 +783,10 @@ void loop() {
                 Serial.println("OPTO > ON");
                 OPTO_START_TIMESTAMP += 1;
               }
+            } else if (OPTO_END_TIMESTAMP == 0){ 
+              Serial.println("OPTO > OFF");
+              digitalWrite(opto_LED, LOW);
+              OPTO_END_TIMESTAMP += 1;
             }
 
             R1_READING = IR_SENSOR_R1.distance(); sensor_cal.CheckDelay(); R1_READING = IR_SENSOR_R1.distance();
@@ -844,27 +825,7 @@ void loop() {
               // RESET RIGHT SENSOR VALUE
               RIGHT_ACTIVE == LOW;
 
-              // continue optogenetics protcol even after shuttling
-              OPTO_CURRENT = millis();
-              OPTO_FLICKER_START = millis();
-              // TURN ON LED OPTOGENETICS FOR OPTO_FULL_DURATION
-              while ((OPTO_CURRENT - OPTO_START) < (OPTO_FULL_DURATION * 1000)){
-                if (OPTO_FLICKER_START - OPTO_FLICKER_PREVIOUS >= ((1/OPTO_FLICKER_DURATION)*500)){
-                  OPTO_FLICKER_PREVIOUS = OPTO_FLICKER_START;
-
-                  if (OPTO_STATE == LOW){
-                    OPTO_STATE = HIGH;
-                  } else {
-                    OPTO_STATE = LOW;
-                  }
-
-                  digitalWrite(opto_LED, OPTO_STATE);
-                }
-                OPTO_CURRENT = millis();
-                OPTO_FLICKER_START = millis();
-              }
-
-              // TERMINATE OPTOGENETICS LED AFTER 15 SEC
+              // TERMINATE OPTOGENETICS LED 
               digitalWrite(opto_LED, LOW);
               if (OPTO_END_TIMESTAMP == 0){
                 Serial.println("OPTO > OFF");
@@ -897,13 +858,6 @@ void loop() {
               SPEAKER_RIGHT.stop();
               SPEAKER_LEFT.stop();
               Serial.println("CS > OFF");
-
-              // TERMINATE OPTOGENETICS LED
-              digitalWrite(opto_LED, LOW);
-              if (OPTO_END_TIMESTAMP == 0){
-                Serial.println("OPTO > OFF");
-                OPTO_END_TIMESTAMP += 1;
-              }
 
               // RECORD LATENCY_END WHEN NO SHUTTLING
               ESCAPE_LATENCY_END = ESCAPE_LATENCY_START;
