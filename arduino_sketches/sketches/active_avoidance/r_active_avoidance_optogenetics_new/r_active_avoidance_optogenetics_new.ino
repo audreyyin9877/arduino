@@ -23,7 +23,7 @@ unsigned long SHOCK_DURATION = 1;                              // SECONDS
 int CS_FREQUENCY = 5000;                                       // IN HERTZ
 int ITI_INTERVALS[] = {40, 60, 80, 100, 120};                  // list of the inter-trial-intervals: ITI
 unsigned long MOTION_DETECTION_DURATION = 30;                  // SECONDS
-const int OPTO_FULL_DURATION = 10;                              // SECONDS
+const int OPTO_FULL_DURATION = 10;                              // SECONDS. Note: can only put a duration of <10 seconds
 const int OPTO_FLICKER_DURATION = 25;                          // IN HERTZ. Due to lag, the true frequency is 20Hz
 //##################################################################################################################
 //##################################################################################################################
