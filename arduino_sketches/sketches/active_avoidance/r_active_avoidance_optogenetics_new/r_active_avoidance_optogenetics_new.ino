@@ -597,7 +597,7 @@ void loop() {
           // BEGIN TIMER FOR OPTOGENETICS LED
           OPTO_START = millis();
           OPTO_CURRENT = millis();
-          int TRIAL_CHECK = 0; 
+          int TRIAL_CHECK = 0;
 
           // RESETTING OPTOGENETICS TIMESTAMP VARIABLES
           OPTO_START_TIMESTAMP = 0;
@@ -634,11 +634,11 @@ void loop() {
                 Serial.println("OPTO > ON");
                 OPTO_START_TIMESTAMP += 1;
               }
-            } else if (OPTO_END_TIMESTAMP == 0){ 
+            } else if (OPTO_END_TIMESTAMP == 0){
               Serial.println("OPTO > OFF");
               digitalWrite(opto_LED, LOW);
               OPTO_END_TIMESTAMP += 1;
-              break; 
+              break;
             }
 
             L1_READING = IR_SENSOR_L1.distance(); sensor_cal.CheckDelay(); L1_READING = IR_SENSOR_L1.distance();
@@ -660,7 +660,7 @@ void loop() {
 
               // ENSURE OPTO LED IS TURNED ON FOR ONE SEC
               float OPTO_NOW = millis();
-              digitalWrite(opto_LED, HIGH); 
+              digitalWrite(opto_LED, HIGH);
 
               // IF THE LEFT IS HIGH THEN TERMINATE TONE AND MOVE TO ITI
               // TERMINATES TONE IN THE RIGHT COMPARTMENT
@@ -684,19 +684,19 @@ void loop() {
               LEFT_ACTIVE = LOW;
 
               OPTO_CURRENT = millis();
-              while ((OPTO_CURRENT - OPTO_NOW) <= 1000){ 
-                OPTO_CURRENT = millis(); 
+              while ((OPTO_CURRENT - OPTO_NOW) <= 1000){
+                OPTO_CURRENT = millis();
               }
 
-              TRIAL_CHECK = 1; 
+              TRIAL_CHECK = 1;
             }
 
             // AFTER SPECIFIC DELAY, TRIGGER US
             if (((CURRENT_TONE_DELAY - START_TONE) > (DELTA_TONE_SHOCK * 1000)) && (TRIAL_CHECK==0)) {
 
-              // ENSURE OPTO LED IS TURNED ON 
-              digitalWrite(opto_LED, HIGH); 
-              
+              // ENSURE OPTO LED IS TURNED ON
+              digitalWrite(opto_LED, HIGH);
+
               // TRIGGER US
               digitalWrite(shocker_l_pin, HIGH);
               digitalWrite(shocker_r_pin, HIGH);
@@ -764,7 +764,7 @@ void loop() {
           // RESETTING OPTOGENETICS TIMESTAMP VARIABLES
           OPTO_START_TIMESTAMP = 0;
           OPTO_END_TIMESTAMP = 0;
-          int TRIAL_CHECK = 0; 
+          int TRIAL_CHECK = 0;
 
           // ADD 0.5 SEC DELAY TO AVOID SENSOR DETECTION ARTIFACTS
           unsigned long S_DELAY_START = millis();
@@ -796,11 +796,11 @@ void loop() {
                 Serial.println("OPTO > ON");
                 OPTO_START_TIMESTAMP += 1;
               }
-            } else if (OPTO_END_TIMESTAMP == 0){ 
+            } else if (OPTO_END_TIMESTAMP == 0){
               Serial.println("OPTO > OFF");
               digitalWrite(opto_LED, LOW);
               OPTO_END_TIMESTAMP += 1;
-              break; 
+              break;
             }
 
             R1_READING = IR_SENSOR_R1.distance(); sensor_cal.CheckDelay(); R1_READING = IR_SENSOR_R1.distance();
@@ -820,7 +820,7 @@ void loop() {
 
               // ENSURE OPTO LED IS TURNED ON FOR ONE SEC
               float OPTO_NOW = millis();
-              digitalWrite(opto_LED, HIGH); 
+              digitalWrite(opto_LED, HIGH);
 
               // IF THE RIGHT IS HIGH THEN TERMINATE TONE AND MOVE TO ITI
               // TERMINATES TONE
@@ -844,19 +844,19 @@ void loop() {
               RIGHT_ACTIVE == LOW;
 
               OPTO_CURRENT = millis();
-              while ((OPTO_CURRENT - OPTO_NOW) <= 1000){ 
-                OPTO_CURRENT = millis(); 
+              while ((OPTO_CURRENT - OPTO_NOW) <= 1000){
+                OPTO_CURRENT = millis();
               }
 
-              TRIAL_CHECK = 1; 
+              TRIAL_CHECK = 1;
             }
 
             // AFTER SPECIFIC DELAY, TRIGGER US
-            if (((CURRENT_TONE_DELAY - START_TONE) > (DELTA_TONE_SHOCK * 1000))&& (TRIAL_CHECK==0)) {  
-              
-              // ENSURE OPTO LED IS TURNED ON 
-              digitalWrite(opto_LED, HIGH); 
-              
+            if (((CURRENT_TONE_DELAY - START_TONE) > (DELTA_TONE_SHOCK * 1000))&& (TRIAL_CHECK==0)) {
+
+              // ENSURE OPTO LED IS TURNED ON
+              digitalWrite(opto_LED, HIGH);
+
               // TRIGGER US
               digitalWrite(shocker_l_pin, HIGH);
               digitalWrite(shocker_r_pin, HIGH);
