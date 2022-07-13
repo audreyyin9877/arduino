@@ -713,13 +713,6 @@ void loop() {
               SPEAKER_LEFT.stop();
               Serial.println("CS > OFF");
 
-              // // TERMINATE OPTOGENETICS LED AFTER 15 SEC
-              // digitalWrite(opto_LED, LOW);
-              // if (OPTO_END_TIMESTAMP == 0){
-              //   Serial.println("OPTO > OFF");
-              //   OPTO_END_TIMESTAMP += 1;
-              // }
-
               // RECORD LATENCY_END WHEN NO SHUTTLING
               ESCAPE_LATENCY_END = ESCAPE_LATENCY_START;
 
@@ -867,13 +860,6 @@ void loop() {
               SPEAKER_LEFT.stop();
               Serial.println("CS > OFF");
 
-              // // TERMINATE OPTOGENETICS LED AFTER 15 SEC
-              // digitalWrite(opto_LED, LOW);
-              // if (OPTO_END_TIMESTAMP == 0){
-              //   Serial.println("OPTO > OFF");
-              //   OPTO_END_TIMESTAMP += 1;
-              // }
-
               // RECORD LATENCY_END WHEN NO SHUTTLING
               ESCAPE_LATENCY_END = ESCAPE_LATENCY_START;
 
@@ -882,7 +868,6 @@ void loop() {
 
               // TURN LED OFF IN BOTH SIDES
               digitalWrite(speaker_led_r, LOW); digitalWrite(speaker_led_l, LOW);
-
               break;
             }
             CURRENT_TONE_DELAY = millis();
